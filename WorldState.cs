@@ -1,4 +1,5 @@
-﻿using SpaceSimulation.Components;
+﻿using SpaceSimulation.Bases;
+using SpaceSimulation.Components;
 using SpaceSimulation.Nodes;
 using System;
 using System.Collections.Generic;
@@ -31,12 +32,16 @@ namespace SpaceSimulation
                     }
                 }
             }
-            var stn = new Bases.Station();
-            //stn.
-            //map[500,500] = 
-            mapViewSize = 80;
 
+            mapViewSize = 80;
     }
+
+        public void placeObject(Entity entity, int x, int y)
+        {
+            // TODO check for collision???
+            entity.setLocation(new Tuple<int, int>(x, y));
+            map[x, y] = entity;
+        }
         public List<Entity> GetObjectsInView(int x, int y)
         {
             List<Entity> found = new List<Entity>();
@@ -45,7 +50,7 @@ namespace SpaceSimulation
             var top = Math.Max(0, y - (mapViewSize / 2));
             var bot = Math.Min(MAP_SIZE, y + (mapViewSize / 2));
 
-            Debug.WriteLine("" + left + "," + right + "," + top + "," + bot);
+            //Debug.WriteLine("" + left + "," + right + "," + top + "," + bot);
 
             for (int i = left; i < right; i++)
             {
