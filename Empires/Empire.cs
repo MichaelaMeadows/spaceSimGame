@@ -9,16 +9,20 @@ namespace SpaceSimulation.Empires
 {
     class Empire
     {
-        private List<Station> stations;
-        private List<Vehicle> vehicles;
-        private List<Ship> ships;
-        private int funds;
+        public List<Station> stations;
+        public List<Ship> ships;
+        public int funds;
+        public int playerId;
         public Empire()
         {
-            funds = 0;
-            vehicles = new List<Vehicle>();
+            funds = 100;
             stations = new List<Station>();
             ships = new List<Ship>();
+        }
+        // Each empire independantly assigns tasks to resources it controls. After task assignment, the game executes each step.
+        public void executeStrategy()
+        {
+
         }
 
     }

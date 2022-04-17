@@ -1,6 +1,8 @@
 ﻿using SpaceSimulation.Bases;
 using SpaceSimulation.Components;
+using SpaceSimulation.Empires;
 using SpaceSimulation.Nodes;
+using SpaceSimulation.Vehicles;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,28 +13,41 @@ namespace SpaceSimulation
     class WorldState
     {
         public Entity[,] map { get; set; }
-        public int mapViewSize { get; set; }
+        public Node[] nodes {get;}
 
-        public static int MAP_SIZE = 1000;
+        public int mapViewSize { get; set; }
+        
+
+        public static int MAP_SIZE = 2000;
         public WorldState()
         {
+            var nodeList = new List<Node>();
+
             map = new Entity[MAP_SIZE, MAP_SIZE];
             var rand = new Random();
             for (int i = 0; i< 1000; i++) {
                 for(int j = 0; j < 1000; j++) {
                     Node iron = new Node();
-                    iron.name = "iron";
+                    iron.type = "iron";
                     iron.id = 1;
                     iron.outputVolume = 2;
                     iron.location = new Tuple<int, int>(i, j);
 
-                    if (rand.NextDouble() > .95) {
+                    if (rand.NextDouble() > .995) {
                         map[i, j] = iron;
+                        nodeList.Add(iron);
                         //Debug.WriteLine("added iron");
                     }
                 }
             }
-
+            //BasicMiner miner = new BasicMiner();
+            //miner.
+            nodes = new Node[nodeList.Count];
+            for (int i = 0; i < nodeList.Count; i++)
+            {
+                nodes[i] = nodeList[i];
+            }
+            nodeList = null;
             mapViewSize = 80;
     }
 
@@ -45,10 +60,11 @@ namespace SpaceSimulation
         public List<Entity> GetObjectsInView(int x, int y)
         {
             List<Entity> found = new List<Entity>();
-            var left = Math.Max(0, x - (mapViewSize / 2));
-            var right = Math.Min(MAP_SIZE, x + (mapViewSize / 2));
-            var top = Math.Max(0, y - (mapViewSize / 2));
-            var bot = Math.Min(MAP_SIZE, y + (mapViewSize / 2));
+            int half = (mapViewSize / 2);
+            var left = Math.Max(0, x - half);
+            var right = Math.Min(MAP_SIZE, x + half);
+            var top = Math.Max(0, y - half);
+            var bot = Math.Min(MAP_SIZE, y + half);
 
             //Debug.WriteLine("" + left + "," + right + "," + top + "," + bot);
 
@@ -62,6 +78,39 @@ namespace SpaceSimulation
                 }
             }
             return found;
+        }
+
+        // Move things as they have been instructed.
+        public void moveAssets()
+        {
+
+        }
+
+        public void updateNodes()
+        {
+            foreach (Node n in nodes) {
+                n.refresh();
+            }
+        }
+
+        public Tuple<int, int> findEmptyNeighbor(int x, int y)
+        {
+            var left = Math.Max(0, x - 1);
+            var right = Math.Min(MAP_SIZE, x + 1);
+            var top = Math.Max(0, y - 1);
+            var bot = Math.Min(MAP_SIZE, y + 1);
+            for (int i = left; i < right; i++)
+            {
+                for (int j = top; j < bot; j++)
+                {
+                    if (map[i, j] == null)
+                    {
+                        return new Tuple<int, int>(i, j);
+                    }
+                }
+            }
+
+            return null;
         }
     }
 

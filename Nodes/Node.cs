@@ -9,8 +9,10 @@ namespace SpaceSimulation.Nodes
     class Node : Entity
     {
         public int id { get; set; }
-        public String name { get; set; }
+        public String type { get; set; }
+        public int unit_size { get; set; }
         public int outputVolume { get; set; }
+        private int store;
         public Tuple<int, int> location { get; set; }
 
         public Tuple<int, int> getLocation()
@@ -30,7 +32,23 @@ namespace SpaceSimulation.Nodes
 
         public void setLocation(Tuple<int, int> location)
         {
-            throw new NotImplementedException();
+            this.location = location;
+        }
+
+        public int mine()
+        {
+            if (store > 0)
+            {
+                store = store - 1;
+                return 1;
+            }
+            return 0;
+        }
+
+        public void refresh()
+        {
+            store = store + outputVolume;
+            store = Math.Min(store, (outputVolume * 3));
         }
     }
 }

@@ -2,7 +2,12 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using SpaceSimulation.Bases;
+using SpaceSimulation.Commands;
 using SpaceSimulation.Components;
+using SpaceSimulation.Empires;
+using SpaceSimulation.Ships;
+using SpaceSimulation.Vehicles;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -13,12 +18,20 @@ namespace SpaceSimulation
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        private WorldState worldState;
+        // Collection to hold textures?
         private Texture2D iron_texture;
         private Texture2D base_texture;
+        private Texture2D vehicle_texture;
 
         private float scale;
         private RenderTarget2D renderTarget;
+
+        private WorldState worldState;
+        private List<Empire> empires;
+
+        private Random r;
+
+        float tickCount;
 
         //Viewpoint index using the world state map, not the scaled view.
         private Point viewpoint;
@@ -32,6 +45,11 @@ namespace SpaceSimulation
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            this.IsFixedTimeStep = true;
+            this.TargetElapsedTime = TimeSpan.FromSeconds(1d / 60d);//60d);
+
+            r = new Random();
+            tickCount = 0;
 
             base.Initialize();
         }
@@ -44,34 +62,143 @@ namespace SpaceSimulation
             viewpoint = new Point(500, 500);
 
             worldState = new WorldState();
-            Station capital = new Station();
-            worldState.placeObject(capital, 500, 500);
+
+            Station capital = new Station(new Tuple<int, int>(100, 100));
+            worldState.placeObject(capital, 10, 10);
+            empires = new List<Empire>();
+            for (int i = 0; i < 12; i++)
+            {
+                
+                Empire e1 = new Empire();
+                empires.Add(e1);
+                int x = r.Next(0, 1000);
+                int y = r.Next(0, 1000);
+                capital = new Station(new Tuple<int, int>(x, y));
+                worldState.placeObject(capital, x, y);
+
+
+                Vehicle v1 = new Vehicle();
+                v1.speed = 3;
+                v1.capacity = 10;
+                v1.location = new Tuple<int, int>(x + 10, y + 10); 
+                capital.vehicles.Add(v1);
+       
+                worldState.placeObject(v1, x + 10, y + 10);
+
+                var n1 = worldState.nodes[r.Next(0, worldState.nodes.Length)];
+                Command c = new Mine(v1, n1, capital);
+                v1.command = c;
+
+                v1 = new Vehicle();
+                v1.speed = 3;
+                v1.capacity = 10;
+                v1.location = new Tuple<int, int>(x - 10, y - 10);
+                capital.vehicles.Add(v1);
+                e1.stations.Add(capital);
+                worldState.placeObject(v1, x - 10, y - 10);
+                n1 = worldState.nodes[r.Next(0, worldState.nodes.Length)];
+                c = new Mine(v1, n1, capital);
+                v1.command = c;
+            }
 
             iron_texture = Content.Load<Texture2D>("iron");
             base_texture = Content.Load<Texture2D>("ship1");
+            vehicle_texture = Content.Load<Texture2D>("smallCar");
 
             // TODO: use this.Content to load your game content here
+
+            // empires = new List<Empire>();
+            // Empire e1 = new Empire();
+
+
+            // Vehicle v1 = new Vehicle();
+            //capital.vehicles.Add(v1);
+            //e1.stations.Add(capital);
+
+
+            Debug.WriteLine("Empires" + empires.Count);
+            foreach (Empire e in empires)
+            {
+                Debug.WriteLine("Stations" + e.stations.Count);
+                foreach (Station s in e.stations)
+                {
+                    Debug.WriteLine("Vehicles" + s.vehicles.Count);
+                    foreach (Vehicle v in s.vehicles)
+                    {
+                        if (v.command.getState().Equals(CommandState.SUCCESS))
+                        {
+                            var n1 = worldState.nodes[r.Next(0, worldState.nodes.Length)];
+                            Command c = new Mine(v, n1, s);
+                            v.command = c;
+                            v.current_capacity = 0;
+                        }
+                        else
+                        {
+                            v.command.execute(worldState);
+                        }
+                    }
+                }
+
+            }
+
+
+
         }
 
         protected override void Update(GameTime gameTime)
         {
+            tickCount++;
+
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-            if (Keyboard.GetState().IsKeyDown(Keys.W))
+            if (Keyboard.GetState().IsKeyDown(Keys.W) && viewpoint.Y > 20)
                 viewpoint.Y = viewpoint.Y - 1;
-            if (Keyboard.GetState().IsKeyDown(Keys.S))
+            if (Keyboard.GetState().IsKeyDown(Keys.S) && viewpoint.Y < 1980)
                 viewpoint.Y = viewpoint.Y + 1;
-            if (Keyboard.GetState().IsKeyDown(Keys.A))
+            if (Keyboard.GetState().IsKeyDown(Keys.A) && viewpoint.X > 20)
                 viewpoint.X = viewpoint.X - 1;
-            if (Keyboard.GetState().IsKeyDown(Keys.D))
+            if (Keyboard.GetState().IsKeyDown(Keys.D) && viewpoint.X < 1980)
                 viewpoint.X = viewpoint.X + 1;
-            if (Keyboard.GetState().IsKeyDown(Keys.O))
+            if (Keyboard.GetState().IsKeyDown(Keys.O) && worldState.mapViewSize > 20)
                 worldState.mapViewSize = worldState.mapViewSize - 2;
-            if (Keyboard.GetState().IsKeyDown(Keys.P))
+            if (Keyboard.GetState().IsKeyDown(Keys.P) && worldState.mapViewSize < 400)
                 worldState.mapViewSize = worldState.mapViewSize + 2;
+
+            if (tickCount > 60)
+            {
+                worldState.updateNodes();
+                tickCount = 0;
+            }
+
+            foreach (Empire e in empires)
+            {
+                foreach (Station s in e.stations)
+                {
+                    foreach(Vehicle v in s.vehicles)
+                    {
+                        if (v.command.getState().Equals(CommandState.SUCCESS))
+                        {
+                            var n1 = worldState.nodes[r.Next(0, worldState.nodes.Length)];
+                            Command c = new Mine(v, n1, s);
+                            v.command = c;
+                            v.current_capacity = 0;
+                        } else
+                        {
+                            v.command.execute(worldState);
+                        }
+                    }
+                }
+
+            }
 
             // TODO: Add your update logic here
             base.Update(gameTime);
+        }
+
+        // Let the AI's decide what they want to do.
+        public void runStrategies()
+        {
+
         }
 
         protected override void Draw(GameTime gameTime)
@@ -91,15 +218,36 @@ namespace SpaceSimulation
             //_spriteBatch.Draw(texture, position, new Rectangle(new Point(50, 50), new Point(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height)), Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
             // _spriteBatch.Draw(texture, new Rectangle(0, 0, 15, 15), Color.White);
 
-            Debug.WriteLine(widthScale);
-            Debug.WriteLine(heightScale);
+            //Debug.WriteLine(widthScale);
+            //Debug.WriteLine(heightScale);
+            //Random r = new Random();
             foreach (Entity e in objectsInView)
             {
+                //worldState.placeObject(e, r.Next(0, 1000), r.Next(0, 1000));
                 var tmpTexture = iron_texture;
                 if (e.GetType() == typeof(Station)) {
                     tmpTexture = base_texture;
+                } else if (e.GetType() == typeof(Vehicle))
+                {
+                  /*  var xd = r.Next(-2, 3);
+                    var yd = r.Next(-2, 3);
+                    var nx = e.getLocation().Item1 + xd;
+                    nx = Math.Max(0, nx);
+                    nx = Math.Min(1998, nx);
+                    var ny = e.getLocation().Item2 + yd;
+                    ny = Math.Max(0, ny);
+                    ny = Math.Min(1998, ny);
+
+                    //e.setLocation(new Tuple<int, int>(e.getLocation().Item1 + xd, e.getLocation().Item2 + yd));
+                    worldState.placeObject(e, nx, ny);*/
+                    tmpTexture = vehicle_texture;
                 }
-                _spriteBatch.Draw(tmpTexture, new Rectangle((e.getLocation().Item1 - viewCorner_x) * widthScale, (e.getLocation().Item2 - viewCorner_y - (e.getSize() / 2)) * heightScale, e.getSize() * widthScale, e.getSize() * heightScale), Color.White);
+                _spriteBatch.Draw(tmpTexture, new Rectangle(
+                    (e.getLocation().Item1 - viewCorner_x - (e.getSize() / 2)) * widthScale, 
+                    (e.getLocation().Item2 - viewCorner_y - (e.getSize() / 2)) * heightScale, 
+                    e.getSize() * widthScale, 
+                    e.getSize() * heightScale), 
+                    Color.White);
             }
 
             _spriteBatch.End();
