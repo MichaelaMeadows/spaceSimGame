@@ -23,6 +23,11 @@ namespace SpaceSimulation.Vehicles
         public Tuple<int, int> location { get; set; }
         public Command command { get; set;}
 
+        public Vehicle(Tuple<int, int> location)
+        {
+            this.location = location;
+        }
+
         public Tuple<int, int> getLocation()
         {
             return location;
@@ -40,6 +45,10 @@ namespace SpaceSimulation.Vehicles
 
         public void setLocation(Tuple<int, int> location)
         {
+            if (location == null)
+            {
+                throw new Exception();
+            }
             this.location = location;
         }
     }

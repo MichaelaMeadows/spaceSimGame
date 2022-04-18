@@ -16,6 +16,7 @@ namespace SpaceSimulation.Commands
         private Node n;
         private Station s;
         private CommandState state;
+        private int stuckCount;
 
         public Mine(Vehicle v, Node n, Station s)
         {
@@ -27,6 +28,7 @@ namespace SpaceSimulation.Commands
 
         public void execute(WorldState ws)
         {
+
             //Debug.WriteLine("Executing");
             if (state.Equals(CommandState.SUCCESS))
             {
@@ -38,25 +40,34 @@ namespace SpaceSimulation.Commands
                 var position = Distances.findNextPosition(ws, v.location, s.location, v.speed);
                 if (position == null)
                 {
-                    //Debug.WriteLine("Next position was null");
                     return;
                 }
                 ws.placeObject(v, position.Item1, position.Item2);
-                state = CommandState.SUCCESS;
+
+                if (Math.Sqrt((Math.Pow(v.location.Item1 - s.location.Item1, 2) + Math.Pow(v.location.Item2 - s.location.Item2, 2))) < 3)
+                {
+                    s.goods[0] += v.current_capacity;
+                    v.current_capacity = 0;
+                    state = CommandState.SUCCESS;
+                }
+                
                 // TODO replace 3 with a "mining distance"
             } else if (Math.Sqrt((Math.Pow(v.location.Item1 - n.location.Item1, 2) + Math.Pow(v.location.Item2 - n.location.Item2, 2))) > 3) // Go to the node
             {
                 var position = Distances.findNextPosition(ws, v.location, n.location, v.speed);
                 if (position == null)
                 {
+                    stuckCount++;
                     //Debug.WriteLine("Next position was null");
                     return;
                 }
                 ws.placeObject(v, position.Item1, position.Item2);
+                
             } else // wait and mine
             {
                 // TODO make mining sane
-                v.current_capacity = v.capacity;
+
+                v.current_capacity += n.mine();
             }
         }
 

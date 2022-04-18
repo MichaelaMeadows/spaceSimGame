@@ -63,42 +63,17 @@ namespace SpaceSimulation
 
             worldState = new WorldState();
 
-            Station capital = new Station(new Tuple<int, int>(100, 100));
-            worldState.placeObject(capital, 10, 10);
+            // Create 12 empires in random starting locations
             empires = new List<Empire>();
             for (int i = 0; i < 12; i++)
             {
-                
                 Empire e1 = new Empire();
                 empires.Add(e1);
-                int x = r.Next(0, 1000);
-                int y = r.Next(0, 1000);
-                capital = new Station(new Tuple<int, int>(x, y));
+                int x = r.Next(15, 1000);
+                int y = r.Next(15, 1000);
+                Station capital = new Station(new Tuple<int, int>(x, y));
                 worldState.placeObject(capital, x, y);
-
-
-                Vehicle v1 = new Vehicle();
-                v1.speed = 3;
-                v1.capacity = 10;
-                v1.location = new Tuple<int, int>(x + 10, y + 10); 
-                capital.vehicles.Add(v1);
-       
-                worldState.placeObject(v1, x + 10, y + 10);
-
-                var n1 = worldState.nodes[r.Next(0, worldState.nodes.Length)];
-                Command c = new Mine(v1, n1, capital);
-                v1.command = c;
-
-                v1 = new Vehicle();
-                v1.speed = 3;
-                v1.capacity = 10;
-                v1.location = new Tuple<int, int>(x - 10, y - 10);
-                capital.vehicles.Add(v1);
                 e1.stations.Add(capital);
-                worldState.placeObject(v1, x - 10, y - 10);
-                n1 = worldState.nodes[r.Next(0, worldState.nodes.Length)];
-                c = new Mine(v1, n1, capital);
-                v1.command = c;
             }
 
             iron_texture = Content.Load<Texture2D>("iron");
@@ -106,43 +81,6 @@ namespace SpaceSimulation
             vehicle_texture = Content.Load<Texture2D>("smallCar");
 
             // TODO: use this.Content to load your game content here
-
-            // empires = new List<Empire>();
-            // Empire e1 = new Empire();
-
-
-            // Vehicle v1 = new Vehicle();
-            //capital.vehicles.Add(v1);
-            //e1.stations.Add(capital);
-
-
-            Debug.WriteLine("Empires" + empires.Count);
-            foreach (Empire e in empires)
-            {
-                Debug.WriteLine("Stations" + e.stations.Count);
-                foreach (Station s in e.stations)
-                {
-                    Debug.WriteLine("Vehicles" + s.vehicles.Count);
-                    foreach (Vehicle v in s.vehicles)
-                    {
-                        if (v.command.getState().Equals(CommandState.SUCCESS))
-                        {
-                            var n1 = worldState.nodes[r.Next(0, worldState.nodes.Length)];
-                            Command c = new Mine(v, n1, s);
-                            v.command = c;
-                            v.current_capacity = 0;
-                        }
-                        else
-                        {
-                            v.command.execute(worldState);
-                        }
-                    }
-                }
-
-            }
-
-
-
         }
 
         protected override void Update(GameTime gameTime)
@@ -164,6 +102,7 @@ namespace SpaceSimulation
             if (Keyboard.GetState().IsKeyDown(Keys.P) && worldState.mapViewSize < 400)
                 worldState.mapViewSize = worldState.mapViewSize + 2;
 
+            // Nodes refresh available resources.
             if (tickCount > 60)
             {
                 worldState.updateNodes();
@@ -172,34 +111,13 @@ namespace SpaceSimulation
 
             foreach (Empire e in empires)
             {
-                foreach (Station s in e.stations)
-                {
-                    foreach(Vehicle v in s.vehicles)
-                    {
-                        if (v.command.getState().Equals(CommandState.SUCCESS))
-                        {
-                            var n1 = worldState.nodes[r.Next(0, worldState.nodes.Length)];
-                            Command c = new Mine(v, n1, s);
-                            v.command = c;
-                            v.current_capacity = 0;
-                        } else
-                        {
-                            v.command.execute(worldState);
-                        }
-                    }
-                }
-
+                e.executeStrategy(worldState);
             }
 
             // TODO: Add your update logic here
             base.Update(gameTime);
         }
 
-        // Let the AI's decide what they want to do.
-        public void runStrategies()
-        {
-
-        }
 
         protected override void Draw(GameTime gameTime)
         {

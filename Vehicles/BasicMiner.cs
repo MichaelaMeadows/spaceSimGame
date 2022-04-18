@@ -6,5 +6,9 @@ namespace SpaceSimulation.Vehicles
 {
     class BasicMiner : Vehicle
     {
+        public BasicMiner(Tuple<int, int> location) : base(location)
+        {
+        }
+
     }
 }

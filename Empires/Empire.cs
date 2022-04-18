@@ -1,4 +1,5 @@
 ﻿using SpaceSimulation.Bases;
+using SpaceSimulation.Commands;
 using SpaceSimulation.Ships;
 using SpaceSimulation.Vehicles;
 using System;
@@ -13,6 +14,7 @@ namespace SpaceSimulation.Empires
         public List<Ship> ships;
         public int funds;
         public int playerId;
+        private Random r = new Random();
         public Empire()
         {
             funds = 100;
@@ -20,9 +22,13 @@ namespace SpaceSimulation.Empires
             ships = new List<Ship>();
         }
         // Each empire independantly assigns tasks to resources it controls. After task assignment, the game executes each step.
-        public void executeStrategy()
+        public void executeStrategy(WorldState ws)
         {
-
+             foreach (Station s in this.stations)
+              {
+                s.buildVehicle(ws);
+                s.mine(ws);
+              }
         }
 
     }

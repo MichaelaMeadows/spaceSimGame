@@ -33,7 +33,7 @@ namespace SpaceSimulation
                     iron.outputVolume = 2;
                     iron.location = new Tuple<int, int>(i, j);
 
-                    if (rand.NextDouble() > .995) {
+                    if (rand.NextDouble() > .9995) {
                         map[i, j] = iron;
                         nodeList.Add(iron);
                         //Debug.WriteLine("added iron");
@@ -54,6 +54,7 @@ namespace SpaceSimulation
         public void placeObject(Entity entity, int x, int y)
         {
             // TODO check for collision???
+            map[entity.getLocation().Item1, entity.getLocation().Item2] = null;
             entity.setLocation(new Tuple<int, int>(x, y));
             map[x, y] = entity;
         }
@@ -78,12 +79,6 @@ namespace SpaceSimulation
                 }
             }
             return found;
-        }
-
-        // Move things as they have been instructed.
-        public void moveAssets()
-        {
-
         }
 
         public void updateNodes()
