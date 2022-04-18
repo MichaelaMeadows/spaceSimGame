@@ -24,7 +24,7 @@ namespace SpaceSimulation.Bases
             location = position;
             vehicles = new List<Vehicle>();
             this.goods = new int[100];
-            this.goods[0] += 300;
+            this.goods[0] += 30000;
         }
 
         public Tuple<int, int> getLocation()
@@ -52,7 +52,7 @@ namespace SpaceSimulation.Bases
             if (this.goods[0] >= 100)
             {
                 // TODO clearly make objects with settings. Extract to json someday
-                Tuple<int, int> location = ws.findEmptyNeighbor(this.location.Item1, this.location.Item2);
+                Tuple<int, int> location = new Tuple<int, int>(this.location.Item1 + r.Next(-1, 1), this.location.Item2 + r.Next(-1, 1));
                 if (location == null)
                 {
 

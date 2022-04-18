@@ -19,7 +19,8 @@ namespace SpaceSimulation.Helpers
             int new_x = start.Item1 + change_x;
             int new_y = start.Item2 + change_y;
 
-            if (ws.map[new_x, new_y] == null)
+            return new Tuple<int, int>(new_x, new_y);
+/*            if (ws.map[new_x, new_y] == null)
             {
                 return new Tuple<int, int>(new_x, new_y);
             } else
@@ -27,7 +28,7 @@ namespace SpaceSimulation.Helpers
                 return ws.findEmptyNeighbor(new_x, new_y);
             }
 
-            return null;
+            return null;*/
         }
 
         public static double distance(Tuple<int, int> p1, Tuple<int, int> p2)
