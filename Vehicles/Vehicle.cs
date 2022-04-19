@@ -35,7 +35,7 @@ namespace SpaceSimulation.Vehicles
 
         public int getSize()
         {
-            return 2;
+            return 6;
         }
 
         public virtual string getSprite()

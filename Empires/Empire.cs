@@ -22,14 +22,27 @@ namespace SpaceSimulation.Empires
             ships = new List<Ship>();
         }
         // Each empire independantly assigns tasks to resources it controls. After task assignment, the game executes each step.
-        public void executeStrategy(WorldState ws)
+        public void executeStrategy(WorldState ws, int tickCount)
         {
-             foreach (Station s in this.stations)
-              {
-                s.buildVehicle(ws);
-                s.mine(ws);
-              }
+            // Create strategy
+            // Order stations
+            // Move vehicles
+            // Move ships
+            if (tickCount % 15 == 0)
+            {
+                foreach (Station s in this.stations)
+                {
+                    s.buildVehicle(ws);
+                    s.mine(ws);
+                }
+            }
+            if (tickCount % 3 == 0)
+            {
+                foreach (Station s in this.stations)
+                {
+                    s.moveVehicles(ws);
+                }
+            }
         }
-
     }
 }

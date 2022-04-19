@@ -22,7 +22,7 @@ namespace SpaceSimulation.Nodes
 
         public int getSize()
         {
-            return outputVolume * 2;
+            return outputVolume * 4;
         }
 
         public string getSprite()

@@ -6,6 +6,7 @@ namespace SpaceSimulation.Commands
 {
     enum CommandState
     {
+        CREATED,
         FAILED,
         SUCCESS,
         PROGRESS,

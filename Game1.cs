@@ -18,11 +18,6 @@ namespace SpaceSimulation
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        // Collection to hold textures?
-        private Texture2D iron_texture;
-        private Texture2D base_texture;
-        private Texture2D vehicle_texture;
-
         private float scale;
         private RenderTarget2D renderTarget;
 
@@ -104,10 +99,10 @@ namespace SpaceSimulation
                 viewpoint.X = viewpoint.X - 2;
             if (Keyboard.GetState().IsKeyDown(Keys.D) && viewpoint.X < worldState.getMapSize() - 50)
                 viewpoint.X = viewpoint.X + 2;
-            if (Keyboard.GetState().IsKeyDown(Keys.O) && worldState.mapViewSize > 40)
-                worldState.mapViewSize = worldState.mapViewSize - 2;
-            if (Keyboard.GetState().IsKeyDown(Keys.P) && worldState.mapViewSize < 800)
-                worldState.mapViewSize = worldState.mapViewSize + 2;
+            if (Keyboard.GetState().IsKeyDown(Keys.O) && worldState.mapViewSize > 140)
+                worldState.mapViewSize = worldState.mapViewSize - 4;
+            if (Keyboard.GetState().IsKeyDown(Keys.P) && worldState.mapViewSize < 2000)
+                worldState.mapViewSize = worldState.mapViewSize + 4;
 
             // Nodes refresh available resources.
             if (tickCount > 60)
@@ -118,7 +113,7 @@ namespace SpaceSimulation
 
             foreach (Empire e in empires)
             {
-                e.executeStrategy(worldState);
+                e.executeStrategy(worldState, (int) tickCount);
             }
 
             // TODO: Add your update logic here
@@ -137,36 +132,11 @@ namespace SpaceSimulation
             var viewCorner_x = viewpoint.X - (mapViewSize / 2);
             var viewCorner_y = viewpoint.Y - (mapViewSize / 2);
             List<Entity> objectsInView = worldState.GetObjectsInView(viewpoint.X, viewpoint.Y);
-            //Debug.WriteLine(objectsInView.Count);
 
             _spriteBatch.Begin();
-            //_spriteBatch.Draw(texture, position, new Rectangle(new Point(50, 50), new Point(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height)), Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
-            // _spriteBatch.Draw(texture, new Rectangle(0, 0, 15, 15), Color.White);
 
-            //Debug.WriteLine(widthScale);
-            //Debug.WriteLine(heightScale);
-            //Random r = new Random();
             foreach (Entity e in objectsInView)
             {
-                //worldState.placeObject(e, r.Next(0, 1000), r.Next(0, 1000));
-               // var tmpTexture = iron_texture;
-               // if (e.GetType() == typeof(Station)) {
-               //     tmpTexture = base_texture;
-               // } else if (e.GetType() == typeof(Vehicle))
-             //   {
-                  /*  var xd = r.Next(-2, 3);
-                    var yd = r.Next(-2, 3);
-                    var nx = e.getLocation().Item1 + xd;
-                    nx = Math.Max(0, nx);
-                    nx = Math.Min(1998, nx);
-                    var ny = e.getLocation().Item2 + yd;
-                    ny = Math.Max(0, ny);
-                    ny = Math.Min(1998, ny);
-
-                    //e.setLocation(new Tuple<int, int>(e.getLocation().Item1 + xd, e.getLocation().Item2 + yd));
-                    worldState.placeObject(e, nx, ny);*/
-                //    tmpTexture = vehicle_texture;
-                //}
                 _spriteBatch.Draw(textureMap.GetValueOrDefault(e.getSprite()), new Rectangle(
                     (int)((e.getLocation().Item1 - viewCorner_x - (e.getSize() / 2)) * widthScale),
                     (int)((e.getLocation().Item2 - viewCorner_y - (e.getSize() / 2)) * heightScale),

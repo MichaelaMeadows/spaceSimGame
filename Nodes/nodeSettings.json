@@ -1,12 +1,16 @@
 ﻿[
   {
     "name": "ironOre",
-    "id": 1,
-    "quantity": 300
+    "id": 0,
+    "quantity": 850,
+    "averageVolume": 4,
+    "variance":  2
   },
   {
     "name": "copperOre",
-    "id": 2,
-    "quantity":500
+    "id": 1,
+    "quantity": 450,
+    "averageVolume": 2,
+    "variance": 1
   }
 ]

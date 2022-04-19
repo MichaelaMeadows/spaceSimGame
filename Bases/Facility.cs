@@ -1,30 +1,16 @@
-﻿using SpaceSimulation.Components;
+﻿using SpaceSimulation.Commands;
+using SpaceSimulation.Components;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace SpaceSimulation.Bases
 {
-    class Facility : Entity
+    interface Facility
     {
-        public Tuple<int, int> getLocation()
-        {
-            throw new NotImplementedException();
-        }
-
-        public int getSize()
-        {
-            return 20;
-        }
-
-        public string getSprite()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void setLocation(Tuple<int, int> location)
-        {
-            throw new NotImplementedException();
-        }
+        public int getSize();
+        public void setCommand(Command c);
+        public void execute(WorldState state);
+        public int getWorkPower();
     }
 }

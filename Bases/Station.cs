@@ -24,7 +24,12 @@ namespace SpaceSimulation.Bases
 
         private List<Node>[] closeNodes;
         public int CLOSE_ORE_COUNT = 10;
-        
+
+        // What the station is working on, and about to distpatch
+        public List<Command> executingCommands;
+        public List<Command> pendingCommands;
+
+
         public Station(Tuple<int, int> position, WorldState state)
         {
             location = position;
@@ -35,6 +40,9 @@ namespace SpaceSimulation.Bases
             closeNodes = new List<Node>[WorldState.RESOURCE_COUNT];
             populateCloseNodes(state);
             facilitySpace = 100;
+            Smelter smelter = new Smelter();
+            List<Facility> facilities = new List<Facility>();
+            facilities.Add(smelter);
         }
 
         private void populateCloseNodes(WorldState state)
@@ -108,11 +116,6 @@ namespace SpaceSimulation.Bases
             {
                 // TODO clearly make objects with settings. Extract to json someday
                 Tuple<int, int> location = new Tuple<int, int>(this.location.Item1 + r.Next(-1, 1), this.location.Item2 + r.Next(-1, 1));
-/*                if (location == null)
-                {
-                    return;
-                }*/
-                
                 Vehicle v1 = new Vehicle(location);
                 v1.speed = 3;
                 v1.capacity = 10;
@@ -135,11 +138,27 @@ namespace SpaceSimulation.Bases
                     Command c = new Mine(v, n1, this);
                     v.command = c;
                     v.current_capacity = 0;
-                }
+                }/*
                 else
                 {
                     v.command.execute(ws);
-                }
+                }*/
+            }
+        }
+        public void moveVehicles(WorldState ws)
+        {
+            foreach (Vehicle v in this.vehicles)
+            {
+                v.command.execute(ws);
+            }
+        }
+
+        public void build(WorldState ws, int target)
+        {
+            // recursively build or gather the requirements?
+            foreach (Facility f in facilities)
+            {
+                
             }
         }
 
