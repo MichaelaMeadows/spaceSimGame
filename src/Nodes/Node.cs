@@ -33,8 +33,10 @@ namespace SpaceSimulation.Nodes
                     return "iron";
                 case 1:
                     return "copper";
+                case 2:
+                    return "hydrogen";
                 default:
-                    return "iron";
+                    throw new Exception();
             }
         }
 

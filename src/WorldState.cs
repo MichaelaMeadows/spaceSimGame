@@ -21,9 +21,9 @@ namespace SpaceSimulation
         public Node[] nodes {get;}
 
         public int mapViewSize { get; set; }
-        public static int BOX_SIZE = 200;
+        public static int BOX_SIZE = 400;
         // I want map size to be a clean multiple of box size
-        public static int MAP_SIZE = BOX_SIZE * 50;
+        public static int MAP_SIZE = BOX_SIZE * 100;
 
         // All goods are pre-determined, and exist in a fixed-sized array for performance.
         public Marketplace marketplace;
@@ -56,10 +56,11 @@ namespace SpaceSimulation
                 // It's a type of ore
                 if (g.cost.Count == 0)
                 {
-                    for (int i = 0; i < 2000; i++)
+                    for (int i = 0; i < settings[g.id].quantity; i++)
                     {
                         Node n1 = new Node();
                         n1.type = g.id;
+                        n1.id = g.id;
                         n1.outputVolume = (settings[g.id].averageVolume + rand.Next(-1 * settings[g.id].variance, settings[g.id].variance));
                         n1.location = new Tuple<int, int>(rand.Next(1, MAP_SIZE), rand.Next(1, MAP_SIZE));
                         map[n1.location.Item1 / BOX_SIZE, n1.location.Item2 / BOX_SIZE].Add(n1);

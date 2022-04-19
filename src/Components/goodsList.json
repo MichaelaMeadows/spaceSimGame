@@ -14,19 +14,50 @@
     "cost": []
   },
   {
+    "name": "hydrogen",
+    "id": 2,
+    "size": 1,
+    "buildEffort": 0,
+    "cost": []
+  },
+  {
+    "name": "iron",
+    "id": 3,
+    "size": 1,
+    "buildEffort": 0,
+    "cost": [
+      [
+        0,
+        2
+      ]
+    ]
+  },
+  {
+    "name": "copper",
+    "id": 4,
+    "size": 1,
+    "buildEffort": 0,
+    "cost": [
+      [
+        1,
+        2
+      ]
+    ]
+  },
+  {
     "name": "basicCircuity",
     "id": 5,
     "size": 5,
     "buildEffort": 10,
     "cost": [
-      {
-        "Item1": 1,
-        "Item2": 3
-      },
-      {
-        "Item1": 2,
-        "Item2": 7
-      }
+      [
+        3,
+        1
+      ],
+      [
+        4,
+        2
+      ]
     ]
   }
 ]

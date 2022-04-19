@@ -31,6 +31,7 @@ namespace SpaceSimulation
 
         //Viewpoint index using the world state map, not the scaled view.
         private Point viewpoint;
+        private int pan_speed = 8;
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -64,7 +65,7 @@ namespace SpaceSimulation
 
             // Create 12 empires in random starting locations
             empires = new List<Empire>();
-            for (int i = 0; i < 12; i++)
+            for (int i = 0; i < 20; i++)
             {
                 Empire e1 = new Empire();
                 empires.Add(e1);
@@ -81,8 +82,7 @@ namespace SpaceSimulation
             textureMap.Add("ship1", Content.Load<Texture2D>("ship1"));
             textureMap.Add("spacestation", Content.Load<Texture2D>("spacestation"));
             textureMap.Add("smallCar", Content.Load<Texture2D>("smallCar"));
-
-            // TODO: use this.Content to load your game content here
+            textureMap.Add("hydrogen", Content.Load<Texture2D>("hydrogen"));
         }
 
         protected override void Update(GameTime gameTime)
@@ -92,13 +92,13 @@ namespace SpaceSimulation
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             if (Keyboard.GetState().IsKeyDown(Keys.W) && viewpoint.Y > 20)
-                viewpoint.Y = viewpoint.Y - 2;
+                viewpoint.Y = viewpoint.Y - pan_speed;
             if (Keyboard.GetState().IsKeyDown(Keys.S) && viewpoint.Y < worldState.getMapSize() - 50)
-                viewpoint.Y = viewpoint.Y + 2;
+                viewpoint.Y = viewpoint.Y + pan_speed;
             if (Keyboard.GetState().IsKeyDown(Keys.A) && viewpoint.X > 20)
-                viewpoint.X = viewpoint.X - 2;
+                viewpoint.X = viewpoint.X - pan_speed;
             if (Keyboard.GetState().IsKeyDown(Keys.D) && viewpoint.X < worldState.getMapSize() - 50)
-                viewpoint.X = viewpoint.X + 2;
+                viewpoint.X = viewpoint.X + pan_speed;
             if (Keyboard.GetState().IsKeyDown(Keys.O) && worldState.mapViewSize > 140)
                 worldState.mapViewSize = worldState.mapViewSize - 4;
             if (Keyboard.GetState().IsKeyDown(Keys.P) && worldState.mapViewSize < 2000)

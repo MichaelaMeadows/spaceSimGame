@@ -3,6 +3,7 @@ using SpaceSimulation.components;
 using SpaceSimulation.Components;
 using SpaceSimulation.Helpers;
 using SpaceSimulation.Nodes;
+using SpaceSimulation.src.Helpers;
 using SpaceSimulation.Vehicles;
 using System;
 using System.Collections.Generic;
@@ -112,44 +113,44 @@ namespace SpaceSimulation.Bases
         // TODO assign what kind with weight?
         public void buildVehicle(WorldState ws)
         {
-            if (this.goods[0] >= 100)
+            // TODO clearly make objects with settings. Extract to json someday
+            Tuple<int, int> location = new Tuple<int, int>(this.location.Item1 + r.Next(-1, 1), this.location.Item2 + r.Next(-1, 1));
+            BasicMiner v1 = new BasicMiner(location);
+            // The check also spends the resources
+            if(Spending.buildIfPossible(this.goods, v1.getCost()))
             {
-                // TODO clearly make objects with settings. Extract to json someday
-                Tuple<int, int> location = new Tuple<int, int>(this.location.Item1 + r.Next(-1, 1), this.location.Item2 + r.Next(-1, 1));
-                Vehicle v1 = new Vehicle(location);
-                v1.speed = 3;
-                v1.capacity = 10;
-                v1.current_capacity = 0;
-                v1.name = "smallCar";
                 this.vehicles.Add(v1);
-                this.goods[0] -= 100;
                 ws.placeObject(v1, location.Item1, location.Item2); 
             }
         }
 
         // TODO assign resource with weight?
-        public void mine(WorldState ws)
+        public void mine(WorldState ws, int target)
         {
             foreach (Vehicle v in this.vehicles)
             {
                 if (v.command == null || v.command.getState().Equals(CommandState.SUCCESS))
                 {
-                    var n1 = closeNodes[0][r.Next(0, closeNodes[0].Count)];
+                    if (closeNodes[target].Count == 0)
+                    {
+                        return;
+                    }
+                    var n1 = closeNodes[target][r.Next(0, closeNodes[target].Count)];
                     Command c = new Mine(v, n1, this);
                     v.command = c;
                     v.current_capacity = 0;
-                }/*
-                else
-                {
-                    v.command.execute(ws);
-                }*/
+                }
             }
         }
         public void moveVehicles(WorldState ws)
         {
             foreach (Vehicle v in this.vehicles)
             {
-                v.command.execute(ws);
+                if (v.command != null)
+                {
+                    v.command.execute(ws);
+                }
+                // TODO add to some idle list?
             }
         }
 

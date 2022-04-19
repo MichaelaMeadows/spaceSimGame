@@ -12,5 +12,12 @@
     "quantity": 450,
     "averageVolume": 2,
     "variance": 1
+  },
+  {
+    "name": "hydrogen",
+    "id": 2,
+    "quantity": 500,
+    "averageVolume": 6,
+    "variance": 3
   }
 ]

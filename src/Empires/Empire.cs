@@ -1,10 +1,7 @@
 ﻿using SpaceSimulation.Bases;
-using SpaceSimulation.Commands;
 using SpaceSimulation.Ships;
-using SpaceSimulation.Vehicles;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace SpaceSimulation.Empires
 {
@@ -33,7 +30,8 @@ namespace SpaceSimulation.Empires
                 foreach (Station s in this.stations)
                 {
                     s.buildVehicle(ws);
-                    s.mine(ws);
+                    // TODO don't only mine iron
+                    s.mine(ws, 0);
                 }
             }
             if (tickCount % 3 == 0)
