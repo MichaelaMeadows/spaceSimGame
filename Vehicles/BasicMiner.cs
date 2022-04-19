@@ -10,5 +10,10 @@ namespace SpaceSimulation.Vehicles
         {
         }
 
+        override public string getSprite()
+        {
+            return "smallCar";
+        }
+
     }
 }

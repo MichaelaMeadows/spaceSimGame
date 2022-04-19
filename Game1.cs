@@ -30,6 +30,7 @@ namespace SpaceSimulation
         private List<Empire> empires;
 
         private Random r;
+        private Dictionary<string, Texture2D> textureMap;
 
         float tickCount;
 
@@ -72,16 +73,19 @@ namespace SpaceSimulation
             {
                 Empire e1 = new Empire();
                 empires.Add(e1);
-                int x = r.Next(15, 1000);
-                int y = r.Next(15, 1000);
-                Station capital = new Station(new Tuple<int, int>(x, y));
+                int x = r.Next(15, worldState.getMapSize() - 10);
+                int y = r.Next(15, worldState.getMapSize() - 10);
+                Station capital = new Station(new Tuple<int, int>(x, y), worldState);
                 worldState.placeObject(capital, x, y);
                 e1.stations.Add(capital);
             }
 
-            iron_texture = Content.Load<Texture2D>("iron");
-            base_texture = Content.Load<Texture2D>("ship1");
-            vehicle_texture = Content.Load<Texture2D>("smallCar");
+            textureMap = new Dictionary<string, Texture2D>();
+            textureMap.Add("iron", Content.Load<Texture2D>("iron"));
+            textureMap.Add("copper", Content.Load<Texture2D>("copper"));
+            textureMap.Add("ship1", Content.Load<Texture2D>("ship1"));
+            textureMap.Add("spacestation", Content.Load<Texture2D>("spacestation"));
+            textureMap.Add("smallCar", Content.Load<Texture2D>("smallCar"));
 
             // TODO: use this.Content to load your game content here
         }
@@ -93,13 +97,13 @@ namespace SpaceSimulation
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             if (Keyboard.GetState().IsKeyDown(Keys.W) && viewpoint.Y > 20)
-                viewpoint.Y = viewpoint.Y - 1;
-            if (Keyboard.GetState().IsKeyDown(Keys.S) && viewpoint.Y < 1980)
-                viewpoint.Y = viewpoint.Y + 1;
+                viewpoint.Y = viewpoint.Y - 2;
+            if (Keyboard.GetState().IsKeyDown(Keys.S) && viewpoint.Y < worldState.getMapSize() - 50)
+                viewpoint.Y = viewpoint.Y + 2;
             if (Keyboard.GetState().IsKeyDown(Keys.A) && viewpoint.X > 20)
-                viewpoint.X = viewpoint.X - 1;
-            if (Keyboard.GetState().IsKeyDown(Keys.D) && viewpoint.X < 1980)
-                viewpoint.X = viewpoint.X + 1;
+                viewpoint.X = viewpoint.X - 2;
+            if (Keyboard.GetState().IsKeyDown(Keys.D) && viewpoint.X < worldState.getMapSize() - 50)
+                viewpoint.X = viewpoint.X + 2;
             if (Keyboard.GetState().IsKeyDown(Keys.O) && worldState.mapViewSize > 40)
                 worldState.mapViewSize = worldState.mapViewSize - 2;
             if (Keyboard.GetState().IsKeyDown(Keys.P) && worldState.mapViewSize < 800)
@@ -124,7 +128,7 @@ namespace SpaceSimulation
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.LightBlue);
+            GraphicsDevice.Clear(Color.DarkBlue);
             // Prepare map scaling
             var mapViewSize = worldState.mapViewSize;
             var heightScale = (double) GraphicsDevice.Viewport.Height / mapViewSize;
@@ -145,11 +149,11 @@ namespace SpaceSimulation
             foreach (Entity e in objectsInView)
             {
                 //worldState.placeObject(e, r.Next(0, 1000), r.Next(0, 1000));
-                var tmpTexture = iron_texture;
-                if (e.GetType() == typeof(Station)) {
-                    tmpTexture = base_texture;
-                } else if (e.GetType() == typeof(Vehicle))
-                {
+               // var tmpTexture = iron_texture;
+               // if (e.GetType() == typeof(Station)) {
+               //     tmpTexture = base_texture;
+               // } else if (e.GetType() == typeof(Vehicle))
+             //   {
                   /*  var xd = r.Next(-2, 3);
                     var yd = r.Next(-2, 3);
                     var nx = e.getLocation().Item1 + xd;
@@ -161,16 +165,16 @@ namespace SpaceSimulation
 
                     //e.setLocation(new Tuple<int, int>(e.getLocation().Item1 + xd, e.getLocation().Item2 + yd));
                     worldState.placeObject(e, nx, ny);*/
-                    tmpTexture = vehicle_texture;
-                }
-                _spriteBatch.Draw(tmpTexture, new Rectangle(
+                //    tmpTexture = vehicle_texture;
+                //}
+                _spriteBatch.Draw(textureMap.GetValueOrDefault(e.getSprite()), new Rectangle(
                     (int)((e.getLocation().Item1 - viewCorner_x - (e.getSize() / 2)) * widthScale),
                     (int)((e.getLocation().Item2 - viewCorner_y - (e.getSize() / 2)) * heightScale),
                     (int)(e.getSize() * widthScale),
                     (int)(e.getSize() * heightScale)), 
                     Color.White);
             }
-
+            
             _spriteBatch.End();
 
             GraphicsDevice.SetRenderTarget(null);

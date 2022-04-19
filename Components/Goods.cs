@@ -11,6 +11,6 @@ namespace SpaceSimulation.components
         public int id { get; set; }
         public int size { get; set; }
         public int buildEffort { get; set; }
-        public List<Tuple<int, int>> cost { get; set; }
+        public List<int[]> cost { get; set; }
     }
 }

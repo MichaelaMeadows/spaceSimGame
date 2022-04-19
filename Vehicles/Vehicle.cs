@@ -38,9 +38,9 @@ namespace SpaceSimulation.Vehicles
             return 2;
         }
 
-        public string getSprite()
+        public virtual string getSprite()
         {
-            throw new NotImplementedException();
+            return name;
         }
 
         public void setLocation(Tuple<int, int> location)

@@ -9,7 +9,7 @@ namespace SpaceSimulation.Nodes
     class Node : Entity
     {
         public int id { get; set; }
-        public String type { get; set; }
+        public int type { get; set; }
         public int unit_size { get; set; }
         public int outputVolume { get; set; }
         private int store;
@@ -22,12 +22,20 @@ namespace SpaceSimulation.Nodes
 
         public int getSize()
         {
-            return 1;
+            return outputVolume * 2;
         }
 
         public string getSprite()
         {
-            throw new NotImplementedException();
+            switch (this.type)
+            {
+                case 0:
+                    return "iron";
+                case 1:
+                    return "copper";
+                default:
+                    return "iron";
+            }
         }
 
         public void setLocation(Tuple<int, int> location)

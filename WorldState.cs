@@ -1,6 +1,7 @@
 ﻿using SpaceSimulation.Bases;
 using SpaceSimulation.Components;
 using SpaceSimulation.Empires;
+using SpaceSimulation.Helpers;
 using SpaceSimulation.Nodes;
 using SpaceSimulation.Vehicles;
 using System;
@@ -17,13 +18,17 @@ namespace SpaceSimulation
         public Node[] nodes {get;}
 
         public int mapViewSize { get; set; }
-
         public static int BOX_SIZE = 100;
-
         // I want map size to be a clean multiple of box size
-        public static int MAP_SIZE = BOX_SIZE * 400;
+        public static int MAP_SIZE = BOX_SIZE * 100;
+
+        // All goods are pre-determined, and exist in a fixed-sized array for performance.
+        public Marketplace marketplace;
+        public static int RESOURCE_COUNT = 4;
+
         public WorldState()
         {
+            loadMarketplace();
             map = new List<Entity>[MAP_SIZE / BOX_SIZE, MAP_SIZE / BOX_SIZE];
             var rand = new Random();
             for (int i = 0; i < MAP_SIZE / BOX_SIZE; i++)
@@ -36,27 +41,20 @@ namespace SpaceSimulation
             }
             var nodeList = new List<Node>();
 
-/*            for (int i = 0; i< MAP_SIZE; i++) {
-                for(int j = 0; j < MAP_SIZE; j++) {
-
-
-                    Node iron = new Node();
-                    iron.type = "iron";
-                    iron.id = 1;
-                    iron.outputVolume = 2;
-                    iron.location = new Tuple<int, int>(i, j);
-                    
-                    if (rand.NextDouble() > .99) {
-                        map[i / BOX_SIZE, j / BOX_SIZE].Add(iron);
-                        nodeList.Add(iron);
-                    }
-                }
-            }*/
-
-            for (int i = 0; i < 50000; i++)
+            for (int i = 0; i < 2000; i++)
             {
                 Node iron = new Node();
-                iron.type = "iron";
+                iron.type = 0;
+                iron.id = 0;
+                iron.outputVolume = 2;
+                iron.location = new Tuple<int, int>(rand.Next(1, MAP_SIZE), rand.Next(1, MAP_SIZE));
+                map[iron.location.Item1 / BOX_SIZE, iron.location.Item2 / BOX_SIZE].Add(iron);
+                nodeList.Add(iron);
+            }
+            for (int i = 0; i < 900; i++)
+            {
+                Node iron = new Node();
+                iron.type = 1;
                 iron.id = 1;
                 iron.outputVolume = 2;
                 iron.location = new Tuple<int, int>(rand.Next(1, MAP_SIZE), rand.Next(1, MAP_SIZE));
@@ -74,6 +72,11 @@ namespace SpaceSimulation
             nodeList = null;
             mapViewSize = 80;
     }
+
+        private void loadMarketplace()
+        {
+            marketplace = new Marketplace();
+        }
 
         public void placeObject(Entity entity, int x, int y)
         {
@@ -131,6 +134,10 @@ namespace SpaceSimulation
             }
 
             return null;
+        }
+        public int getMapSize()
+        {
+            return MAP_SIZE;
         }
     }
 

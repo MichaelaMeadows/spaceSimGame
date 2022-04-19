@@ -1,0 +1,12 @@
+﻿[
+  {
+    "name": "ironOre",
+    "id": 1,
+    "quantity": 300
+  },
+  {
+    "name": "copperOre",
+    "id": 2,
+    "quantity":500
+  }
+]
