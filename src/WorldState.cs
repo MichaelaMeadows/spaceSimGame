@@ -21,7 +21,7 @@ namespace SpaceSimulation
         public Node[] nodes {get;}
 
         public int mapViewSize { get; set; }
-        public static int BOX_SIZE = 400;
+        public static int BOX_SIZE = 100;
         // I want map size to be a clean multiple of box size
         public static int MAP_SIZE = BOX_SIZE * 100;
 

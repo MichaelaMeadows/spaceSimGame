@@ -12,11 +12,10 @@ namespace SpaceSimulation.Commands
 {
     class Mine : Command
     {
-        private Vehicle v;
-        private Node n;
-        private Station s;
-        private CommandState state;
-        private int stuckCount;
+        public Vehicle v;
+        public Node n;
+        public Station s;
+        public CommandState state;
 
         public Mine(Vehicle v, Node n, Station s)
         {
@@ -32,7 +31,13 @@ namespace SpaceSimulation.Commands
             //Debug.WriteLine("Executing");
             if (state.Equals(CommandState.SUCCESS))
             {
-                return;
+                if (this.v.current_capacity == 0)
+                {
+                    state = CommandState.PROGRESS;
+                } else
+                {
+                    return;
+                }
             }
             // Full, so return. Wait if needed.
             if (v.current_capacity >= v.capacity - n.unit_size)
@@ -57,8 +62,6 @@ namespace SpaceSimulation.Commands
                 var position = Distances.findNextPosition(ws, v.location, n.location, v.speed);
                 if (position == null)
                 {
-                    stuckCount++;
-                    //Debug.WriteLine("Next position was null");
                     return;
                 }
                 ws.placeObject(v, position.Item1, position.Item2);
@@ -66,7 +69,6 @@ namespace SpaceSimulation.Commands
             } else // wait and mine
             {
                 // TODO make mining sane
-
                 v.current_capacity += n.mine();
             }
         }

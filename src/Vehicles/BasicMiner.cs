@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SpaceSimulation.src.Vehicles;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -17,6 +18,11 @@ namespace SpaceSimulation.Vehicles
         override public string getSprite()
         {
             return "smallCar";
+        }
+
+        override public VehicleType getVehicleType()
+        {
+            return VehicleType.MINER;
         }
 
         public List<int[]> getCost()

@@ -25,13 +25,13 @@ namespace SpaceSimulation.Empires
             // Order stations
             // Move vehicles
             // Move ships
-            if (tickCount % 15 == 0)
+            if (tickCount % 60 == 0)
             {
                 foreach (Station s in this.stations)
                 {
-                    s.buildVehicle(ws);
+                    //s.buildVehicle(ws);
                     // TODO don't only mine iron
-                    s.mine(ws, 0);
+                    s.saturateMines(ws, 0);
                 }
             }
             if (tickCount % 3 == 0)

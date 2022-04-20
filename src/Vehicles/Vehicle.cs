@@ -1,5 +1,6 @@
 ﻿using SpaceSimulation.Commands;
 using SpaceSimulation.Components;
+using SpaceSimulation.src.Vehicles;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -35,12 +36,17 @@ namespace SpaceSimulation.Vehicles
 
         public int getSize()
         {
-            return 6;
+            return 10;
         }
 
         public virtual string getSprite()
         {
             return name;
+        }
+
+        public virtual VehicleType getVehicleType()
+        {
+            throw new Exception();
         }
 
         public void setLocation(Tuple<int, int> location)

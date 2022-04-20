@@ -105,9 +105,13 @@ namespace SpaceSimulation
                 worldState.mapViewSize = worldState.mapViewSize + 4;
 
             // Nodes refresh available resources.
-            if (tickCount > 60)
+            if (tickCount % 60 == 0)
             {
                 worldState.updateNodes();
+            }
+            // Game runs in 1 minute logical loops so far
+            if (tickCount > 600)
+            {
                 tickCount = 0;
             }
 

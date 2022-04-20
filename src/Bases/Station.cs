@@ -4,6 +4,7 @@ using SpaceSimulation.Components;
 using SpaceSimulation.Helpers;
 using SpaceSimulation.Nodes;
 using SpaceSimulation.src.Helpers;
+using SpaceSimulation.src.Vehicles;
 using SpaceSimulation.Vehicles;
 using System;
 using System.Collections.Generic;
@@ -30,6 +31,7 @@ namespace SpaceSimulation.Bases
         public List<Command> executingCommands;
         public List<Command> pendingCommands;
 
+        // Create a lit of build commands to process?
 
         public Station(Tuple<int, int> position, WorldState state)
         {
@@ -59,7 +61,7 @@ namespace SpaceSimulation.Bases
             {
                 int type = n.type;
                 Double distance = Distances.distance(this.location, n.location);
-                if (distance < 1000)
+                if (distance < 3000)
                 {
                     if(tmp_nodes[type].Count < CLOSE_ORE_COUNT)
                     {
@@ -97,7 +99,7 @@ namespace SpaceSimulation.Bases
         }
         public int getSize()
         {
-            return 16;
+            return 32;
         }
 
         public string getSprite()
@@ -111,7 +113,7 @@ namespace SpaceSimulation.Bases
         }
 
         // TODO assign what kind with weight?
-        public void buildVehicle(WorldState ws)
+        public bool buildVehicle(WorldState ws)
         {
             // TODO clearly make objects with settings. Extract to json someday
             Tuple<int, int> location = new Tuple<int, int>(this.location.Item1 + r.Next(-1, 1), this.location.Item2 + r.Next(-1, 1));
@@ -120,27 +122,90 @@ namespace SpaceSimulation.Bases
             if(Spending.buildIfPossible(this.goods, v1.getCost()))
             {
                 this.vehicles.Add(v1);
-                ws.placeObject(v1, location.Item1, location.Item2); 
+                ws.placeObject(v1, location.Item1, location.Item2);
+                return true;
             }
+            return false;
         }
 
         // TODO assign resource with weight?
-        public void mine(WorldState ws, int target)
+        // Figures out how mnay miners it wishes to have available.
+        // Assignment done separately.
+        // Expensive method, call rarely.
+        public void saturateMines(WorldState ws, int target)
         {
-            foreach (Vehicle v in this.vehicles)
+            int minerCount = 0;
+            Dictionary<Node, int> nodeAssignmentCount = new Dictionary<Node, int>();
+            List<BasicMiner> unassignedMiners = new List<BasicMiner>();
+            foreach (Vehicle v in vehicles)
             {
-                if (v.command == null || v.command.getState().Equals(CommandState.SUCCESS))
+                if (v.getVehicleType() == VehicleType.MINER)
                 {
-                    if (closeNodes[target].Count == 0)
+                    minerCount++;
+                    // It's an active miner, sum the node assignments
+                    if (v.command != null)
                     {
-                        return;
+                        int tmp = nodeAssignmentCount.GetValueOrDefault(((Mine)v.command).n
+                            ,0);
+                        nodeAssignmentCount[((Mine)v.command).n] = 1 + tmp;
+                    } else
+                    {
+                        unassignedMiners.Add((BasicMiner)v);
                     }
-                    var n1 = closeNodes[target][r.Next(0, closeNodes[target].Count)];
-                    Command c = new Mine(v, n1, this);
-                    v.command = c;
-                    v.current_capacity = 0;
                 }
             }
+            int targetCount = 0;
+            foreach (List<Node> l in closeNodes)
+            {
+                foreach (Node n in l)
+                {
+                    // The further away, and the bigger, the more miners we want.
+                    targetCount += (int)(n.outputVolume * ((Distances.distance(n.getLocation(), this.getLocation())) / 300));
+                    if (!nodeAssignmentCount.ContainsKey(n))
+                    {
+                        nodeAssignmentCount.Add(n, 0);
+                    }
+                }
+            }
+            for (int i = 0; i < (targetCount - minerCount); i++)
+            {
+                this.buildVehicle(ws);
+            }
+
+            //Assign lacking miners to nodes
+            foreach (var obj in nodeAssignmentCount)
+            {
+                int removedMiners = 0;
+                int desiredMiners = (int)(obj.Key.outputVolume * ((Distances.distance(obj.Key.getLocation(), this.getLocation())) / 300));
+                for (int q = 0; q < (desiredMiners - obj.Value); q++)
+                {
+                    if (removedMiners < unassignedMiners.Count)
+                    {
+                        Mine c = new Mine(unassignedMiners[removedMiners], obj.Key, this);
+                        unassignedMiners[removedMiners].command = c;
+                        removedMiners++;
+                    }
+                }
+            }
+            
+            /*            foreach (Vehicle v in this.vehicles)
+                        {
+                            Mine mc = (Mine) v.command;
+                            //mc.n
+                            // COMPLETE THE SATURATION LOGIC
+
+                            if (v.command == null || v.command.getState().Equals(CommandState.SUCCESS))
+                            {
+                                if (closeNodes[target].Count == 0)
+                                {
+                                    return;
+                                }
+                                var n1 = closeNodes[target][r.Next(0, closeNodes[target].Count)];
+                                Command c = new Mine(v, n1, this);
+                                v.command = c;
+                                v.current_capacity = 0;
+                            }*/
+        //}
         }
         public void moveVehicles(WorldState ws)
         {
