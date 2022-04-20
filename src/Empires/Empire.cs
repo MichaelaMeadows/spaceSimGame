@@ -29,16 +29,17 @@ namespace SpaceSimulation.Empires
             {
                 foreach (Station s in this.stations)
                 {
-                    //s.buildVehicle(ws);
-                    // TODO don't only mine iron
-                    s.saturateMines(ws, 0);
+                    s.saturateMines(ws);
                 }
             }
+
             if (tickCount % 3 == 0)
             {
                 foreach (Station s in this.stations)
                 {
                     s.moveVehicles(ws);
+                    s.build(ws, 3);
+                    s.runFacilities(ws);
                 }
             }
         }

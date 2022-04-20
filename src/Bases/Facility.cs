@@ -8,8 +8,10 @@ namespace SpaceSimulation.Bases
 {
     interface Facility
     {
+        public List<Command> executingCommands();
         public int getSize();
-        public void setCommand(Command c);
+        public bool canTakeCommand(Command c);
+        public void addCommand(Command c);
         public void execute(WorldState state);
         public int getWorkPower();
     }

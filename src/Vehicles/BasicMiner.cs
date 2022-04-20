@@ -29,7 +29,7 @@ namespace SpaceSimulation.Vehicles
         {
             List<int[]> cost = new List<int[]>();
             int[] c = new int[2];
-            c[0] = 0;
+            c[0] = 3;
             c[1] = 100;
             cost.Add(c);
             return cost;

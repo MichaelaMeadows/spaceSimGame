@@ -28,7 +28,6 @@ namespace SpaceSimulation.Bases
         public int CLOSE_ORE_COUNT = 10;
 
         // What the station is working on, and about to distpatch
-        public List<Command> executingCommands;
         public List<Command> pendingCommands;
 
         // Create a lit of build commands to process?
@@ -43,9 +42,12 @@ namespace SpaceSimulation.Bases
             closeNodes = new List<Node>[WorldState.RESOURCE_COUNT];
             populateCloseNodes(state);
             facilitySpace = 100;
+            // Innit base facilities.
+            // Probably add a spaceport?
             Smelter smelter = new Smelter();
-            List<Facility> facilities = new List<Facility>();
+            this.facilities = new List<Facility>();
             facilities.Add(smelter);
+            pendingCommands = new List<Command>();
         }
 
         private void populateCloseNodes(WorldState state)
@@ -112,7 +114,35 @@ namespace SpaceSimulation.Bases
             this.location = location;
         }
 
+        // 1 Check if any facility can take the command
+        // 2 Pay for it
+        // 3 Submit command to facility
+        // 4 - Add to pending commands list
+        public void build(WorldState ws, int target)
+        {
+            // A little awkward
+            // TODO remove null. Need another pattern.
+            Build b = new Build(this, target, null);
+            // recursively build or gather the requirements?
+            foreach (Facility f in this.facilities)
+            {
+                if (f.canTakeCommand(b))
+                {
+                    // Facility can take the command, and we can pay for it.
+                    if (Spending.buildIfPossible(this.goods, ws.marketplace.goods[target].cost))
+                    {
+                        b = new Build(this, target, f);
+                        f.addCommand(b);
+                        return;
+                    }
+                }
+            }
+            if (pendingCommands.Count < 50) { pendingCommands.Add(b); }
+        }
+
         // TODO assign what kind with weight?
+        // Create a build task which takes some time?
+        // Create a default starport facility?
         public bool buildVehicle(WorldState ws)
         {
             // TODO clearly make objects with settings. Extract to json someday
@@ -132,7 +162,8 @@ namespace SpaceSimulation.Bases
         // Figures out how mnay miners it wishes to have available.
         // Assignment done separately.
         // Expensive method, call rarely.
-        public void saturateMines(WorldState ws, int target)
+        // Perhaps someday choose not to build all miners, or not mine some things?
+        public void saturateMines(WorldState ws)
         {
             int minerCount = 0;
             Dictionary<Node, int> nodeAssignmentCount = new Dictionary<Node, int>();
@@ -145,8 +176,7 @@ namespace SpaceSimulation.Bases
                     // It's an active miner, sum the node assignments
                     if (v.command != null)
                     {
-                        int tmp = nodeAssignmentCount.GetValueOrDefault(((Mine)v.command).n
-                            ,0);
+                        int tmp = nodeAssignmentCount.GetValueOrDefault(((Mine)v.command).n, 0);
                         nodeAssignmentCount[((Mine)v.command).n] = 1 + tmp;
                     } else
                     {
@@ -161,6 +191,7 @@ namespace SpaceSimulation.Bases
                 {
                     // The further away, and the bigger, the more miners we want.
                     targetCount += (int)(n.outputVolume * ((Distances.distance(n.getLocation(), this.getLocation())) / 300));
+                    targetCount = Math.Max(targetCount, 1);
                     if (!nodeAssignmentCount.ContainsKey(n))
                     {
                         nodeAssignmentCount.Add(n, 0);
@@ -177,6 +208,8 @@ namespace SpaceSimulation.Bases
             {
                 int removedMiners = 0;
                 int desiredMiners = (int)(obj.Key.outputVolume * ((Distances.distance(obj.Key.getLocation(), this.getLocation())) / 300));
+                // TODO - It seems to not mine if too close. Something unresolved.
+                desiredMiners = Math.Max(desiredMiners, 1);
                 for (int q = 0; q < (desiredMiners - obj.Value); q++)
                 {
                     if (removedMiners < unassignedMiners.Count)
@@ -187,25 +220,7 @@ namespace SpaceSimulation.Bases
                     }
                 }
             }
-            
-            /*            foreach (Vehicle v in this.vehicles)
-                        {
-                            Mine mc = (Mine) v.command;
-                            //mc.n
-                            // COMPLETE THE SATURATION LOGIC
-
-                            if (v.command == null || v.command.getState().Equals(CommandState.SUCCESS))
-                            {
-                                if (closeNodes[target].Count == 0)
-                                {
-                                    return;
-                                }
-                                var n1 = closeNodes[target][r.Next(0, closeNodes[target].Count)];
-                                Command c = new Mine(v, n1, this);
-                                v.command = c;
-                                v.current_capacity = 0;
-                            }*/
-        //}
+    
         }
         public void moveVehicles(WorldState ws)
         {
@@ -218,16 +233,17 @@ namespace SpaceSimulation.Bases
                 // TODO add to some idle list?
             }
         }
-
-        public void build(WorldState ws, int target)
+        public void runFacilities(WorldState ws)
         {
-            // recursively build or gather the requirements?
-            foreach (Facility f in facilities)
+            foreach (Facility f in this.facilities)
             {
-                
+                if (f.executingCommands() != null)
+                {
+                    f.execute(ws);
+                }
+                // TODO add to some idle list?
             }
         }
-
         public void deliverGoods(int type, int quantity)
         {
             this.goods[type] += quantity;
