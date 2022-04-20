@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SpaceSimulation.Bases
 {
-    class Smelter : Facility
+    class Refinery : Facility
     {
         // turn into a list to avoid constant construction in the getter
         public Command command;
@@ -20,7 +20,7 @@ namespace SpaceSimulation.Bases
             if (c.GetType() == typeof(Build))
             {
                 // Check for all valid smelting targets
-                if (((Build)c).target == 3 || ((Build)c).target == 4)
+                if (((Build)c).target == 3 || ((Build)c).target == 4 || ((Build)c).target == 6)
                 {
                     return true;
                 }

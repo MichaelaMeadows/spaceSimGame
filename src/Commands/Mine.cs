@@ -76,10 +76,6 @@ namespace SpaceSimulation.Commands
                 {
                     if ((v.capacity - v.current_capacity) >= n.unit_size) {
                         int minedUnits = n.mine();
-                        if (n.type == 1)
-                        {
-                            Debug.WriteLine("Copper exists");
-                        }
                         v.goodsManifest[n.type] += minedUnits;
                         v.current_capacity += minedUnits * n.unit_size;
                     }

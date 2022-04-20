@@ -6,7 +6,8 @@ namespace SpaceSimulation.src.Helpers
 {
     public static class Spending
     {
-        public static Boolean buildIfPossible(int[] storage, List<int[]> costs)
+
+        public static bool canAfford(int[] storage, List<int[]> costs)
         {
             foreach (var cost in costs)
             {
@@ -15,12 +16,21 @@ namespace SpaceSimulation.src.Helpers
                     return false;
                 }
             }
+            return true;
+        }
+        public static bool buildIfPossible(int[] storage, List<int[]> costs)
+        {
+            if (canAfford(storage, costs)) { 
 
             foreach (var cost in costs)
             {
                 storage[cost[0]] -= cost[1];
             }
                 return true;
+        }   else
+            {
+                return false;
+            }
          }
 
     }

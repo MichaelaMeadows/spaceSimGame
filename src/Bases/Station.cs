@@ -50,7 +50,7 @@ namespace SpaceSimulation.Bases
             facilitySpace = 100;
             // Innit base facilities.
             // Probably add a spaceport?
-            Smelter smelter = new Smelter();
+            Refinery smelter = new Refinery();
             Starport port = new Starport();
             Fabricator fab = new Fabricator();
             this.facilities = new List<Facility>();

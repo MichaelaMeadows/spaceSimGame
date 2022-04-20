@@ -3,6 +3,7 @@ using SpaceSimulation.Components;
 using SpaceSimulation.src.Vehicles;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace SpaceSimulation.Vehicles
@@ -24,7 +25,6 @@ namespace SpaceSimulation.Vehicles
         public int miningpower { get; set; }
         public Tuple<int, int> location { get; set; }
         public Command command { get; set; }
-
         public int[] goodsManifest;
 
         public Vehicle(Tuple<int, int> location)

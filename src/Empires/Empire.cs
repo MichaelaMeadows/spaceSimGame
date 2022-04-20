@@ -11,12 +11,15 @@ namespace SpaceSimulation.Empires
         public List<Ship> ships;
         public int funds;
         public int playerId;
+        private int[] researchPoints;
         private Random r = new Random();
         public Empire()
         {
             funds = 100;
             stations = new List<Station>();
             ships = new List<Ship>();
+            // 10 tiers of research points?
+            researchPoints = new int[10];
         }
         // Each empire independantly assigns tasks to resources it controls. After task assignment, the game executes each step.
         public void executeStrategy(WorldState ws, int tickCount)
@@ -31,6 +34,7 @@ namespace SpaceSimulation.Empires
                 {
                     s.saturateMines(ws);
                     s.build(ws, 5);
+                    s.build(ws, 6);
                 }
             }
 

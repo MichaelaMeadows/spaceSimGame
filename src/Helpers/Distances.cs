@@ -10,8 +10,14 @@ namespace SpaceSimulation.Helpers
         public static Tuple<int, int> findNextPosition(WorldState ws, Tuple<int, int> start, Tuple<int, int> end, int speed)
         {
             var d = distance(start, end);
+            if (d == 0)
+            {
+                return start;
+            }
+
             int dx = end.Item1 - start.Item1;
             int dy = end.Item2 - start.Item2;
+
 
             int change_x = (int)Math.Round((dx / d) * speed);
             int change_y = (int)Math.Round((dy / d) * speed);

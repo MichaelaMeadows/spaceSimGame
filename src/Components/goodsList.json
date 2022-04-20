@@ -2,14 +2,14 @@
   {
     "name": "ironOre",
     "id": 0,
-    "size": 100,
+    "size": 10,
     "buildEffort": 0,
     "cost": []
   },
   {
     "name": "copperOre",
     "id": 1,
-    "size": 100,
+    "size": 10,
     "buildEffort": 0,
     "cost": []
   },
@@ -56,6 +56,18 @@
       ],
       [
         4,
+        2
+      ]
+    ]
+  },
+  {
+    "name": "hydroCell",
+    "id": 6,
+    "size": 1,
+    "buildEffort": 1,
+    "cost": [
+      [
+        2,
         2
       ]
     ]
