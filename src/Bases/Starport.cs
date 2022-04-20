@@ -1,35 +1,33 @@
-﻿using SpaceSimulation.Commands;
+﻿using SpaceSimulation.Bases;
+using SpaceSimulation.Commands;
+using SpaceSimulation.src.Commands;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SpaceSimulation.Bases
+namespace SpaceSimulation.src.Bases
 {
-    class Smelter : Facility
+    class Starport : Facility
     {
         // turn into a list to avoid constant construction in the getter
         public Command command;
-
+        // TODO Expand starports for concurrent builds!!!
         public void addCommand(Command c)
         {
             this.command = c;
         }
-
         public bool isEligible(Command c)
         {
-            if (c.GetType() == typeof(Build))
+            if (c.GetType() == typeof(BuildVehicle))
             {
-                // Check for all valid smelting targets
-                if (((Build)c).target == 3 || ((Build)c).target == 4)
-                {
-                    return true;
-                }
+                return true;
             }
             return false;
         }
         public bool canTakeCommand(Command c)
         {
-            if (this.command == null || this.command.getState() != CommandState.PROGRESS) {
+            if (this.command == null || this.command.getState() != CommandState.PROGRESS)
+            {
                 return isEligible(c);
             }
             return false;
@@ -37,7 +35,7 @@ namespace SpaceSimulation.Bases
 
         public void execute(WorldState ws)
         {
-            if(command == null)
+            if (command == null)
             {
                 return;
             }
@@ -53,7 +51,7 @@ namespace SpaceSimulation.Bases
 
         public int getSize()
         {
-            return 5;
+            return 20;
         }
 
         public int getWorkPower()

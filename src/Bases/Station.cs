@@ -3,6 +3,8 @@ using SpaceSimulation.components;
 using SpaceSimulation.Components;
 using SpaceSimulation.Helpers;
 using SpaceSimulation.Nodes;
+using SpaceSimulation.src.Bases;
+using SpaceSimulation.src.Commands;
 using SpaceSimulation.src.Helpers;
 using SpaceSimulation.src.Vehicles;
 using SpaceSimulation.Vehicles;
@@ -17,6 +19,7 @@ namespace SpaceSimulation.Bases
         public String name { get; set; }
         public int id { get; set; }
         public int[] goods { get; set; }
+        public int[] desiredGoods { get; set; }
         public int facilitySpace;
         public List<Facility> facilities { get; set; }
         public int health { get; set; }
@@ -30,6 +33,8 @@ namespace SpaceSimulation.Bases
         // What the station is working on, and about to distpatch
         public List<Command> pendingCommands;
 
+        public Dictionary<Facility, List<Command>> waitingTasks;
+
         // Create a lit of build commands to process?
 
         public Station(Tuple<int, int> position, WorldState state)
@@ -37,6 +42,7 @@ namespace SpaceSimulation.Bases
             location = position;
             vehicles = new List<Vehicle>();
             this.goods = new int[state.marketplace.goods.Length];
+            this.desiredGoods = new int[state.marketplace.goods.Length];
             this.goods[0] += 30000;
 
             closeNodes = new List<Node>[WorldState.RESOURCE_COUNT];
@@ -45,9 +51,15 @@ namespace SpaceSimulation.Bases
             // Innit base facilities.
             // Probably add a spaceport?
             Smelter smelter = new Smelter();
+            Starport port = new Starport();
             this.facilities = new List<Facility>();
             facilities.Add(smelter);
+            facilities.Add(port);
             pendingCommands = new List<Command>();
+
+            waitingTasks = new Dictionary<Facility, List<Command>>();
+            waitingTasks[smelter] = new List<Command>();
+            waitingTasks[port] = new List<Command>();
         }
 
         private void populateCloseNodes(WorldState state)
@@ -118,7 +130,7 @@ namespace SpaceSimulation.Bases
         // 2 Pay for it
         // 3 Submit command to facility
         // 4 - Add to pending commands list
-        public void build(WorldState ws, int target)
+        public bool build(WorldState ws, int target)
         {
             // A little awkward
             // TODO remove null. Need another pattern.
@@ -133,11 +145,12 @@ namespace SpaceSimulation.Bases
                     {
                         b = new Build(this, target, f);
                         f.addCommand(b);
-                        return;
+                        return true;
                     }
                 }
             }
-            if (pendingCommands.Count < 50) { pendingCommands.Add(b); }
+            this.desiredGoods[target] += 1;
+            return false;
         }
 
         // TODO assign what kind with weight?
@@ -149,12 +162,22 @@ namespace SpaceSimulation.Bases
             Tuple<int, int> location = new Tuple<int, int>(this.location.Item1 + r.Next(-1, 1), this.location.Item2 + r.Next(-1, 1));
             BasicMiner v1 = new BasicMiner(location);
             // The check also spends the resources
-            if(Spending.buildIfPossible(this.goods, v1.getCost()))
+            BuildVehicle b = new BuildVehicle(this, v1, null);
+            foreach (Facility f in this.facilities)
             {
-                this.vehicles.Add(v1);
-                ws.placeObject(v1, location.Item1, location.Item2);
-                return true;
+                if (f.canTakeCommand(b))
+                {
+                    if (Spending.buildIfPossible(this.goods, v1.getCost()))
+                    {
+                        //this.vehicles.Add(v1);
+                        // ws.placeObject(v1, location.Item1, location.Item2);
+                        b = new BuildVehicle(this, v1, f);
+                        f.addCommand(b);
+                        return true;
+                    }
+                }
             }
+           // if (pendingCommands.Count < 50) { pendingCommands.Add(b); }
             return false;
         }
 

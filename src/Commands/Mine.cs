@@ -51,7 +51,11 @@ namespace SpaceSimulation.Commands
 
                 if (Math.Sqrt((Math.Pow(v.location.Item1 - s.location.Item1, 2) + Math.Pow(v.location.Item2 - s.location.Item2, 2))) < 3)
                 {
-                    s.goods[0] += v.current_capacity;
+                    for (int x = 0; x < s.goods.Length; x++)
+                    {
+                        s.goods[x] += v.goodsManifest[x];
+                        v.goodsManifest[x] = 0;
+                    }
                     v.current_capacity = 0;
                     state = CommandState.SUCCESS;
                 }
@@ -68,8 +72,14 @@ namespace SpaceSimulation.Commands
                 
             } else // wait and mine
             {
-                // TODO make mining sane
-                v.current_capacity += n.mine();
+                for (int i = 0; i < v.miningpower; i++)
+                {
+                    if ((v.capacity - v.current_capacity) >= n.unit_size) {
+                        int minedUnits = n.mine();
+                        v.goodsManifest[n.type] += minedUnits;
+                        v.current_capacity += minedUnits * n.unit_size;
+                    }
+                }
             }
         }
 

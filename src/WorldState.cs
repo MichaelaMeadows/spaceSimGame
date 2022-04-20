@@ -63,6 +63,7 @@ namespace SpaceSimulation
                         n1.id = g.id;
                         n1.outputVolume = (settings[g.id].averageVolume + rand.Next(-1 * settings[g.id].variance, settings[g.id].variance));
                         n1.location = new Tuple<int, int>(rand.Next(1, MAP_SIZE), rand.Next(1, MAP_SIZE));
+                        n1.unit_size = g.size;
                         map[n1.location.Item1 / BOX_SIZE, n1.location.Item2 / BOX_SIZE].Add(n1);
                         nodeList.Add(n1);
                     }
@@ -81,6 +82,7 @@ namespace SpaceSimulation
         private void loadMarketplace()
         {
             marketplace = new Marketplace();
+            Global.gameGoods = marketplace.goods;
         }
 
         public void placeObject(Entity entity, int x, int y)

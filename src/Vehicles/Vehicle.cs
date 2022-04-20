@@ -21,12 +21,16 @@ namespace SpaceSimulation.Vehicles
         public int health { get; set; }
         public int armor { get; set; }
         public int shield { get; set; }
+        public int miningpower { get; set; }
         public Tuple<int, int> location { get; set; }
-        public Command command { get; set;}
+        public Command command { get; set; }
+
+        public int[] goodsManifest;
 
         public Vehicle(Tuple<int, int> location)
         {
             this.location = location;
+            goodsManifest = new int[Global.gameGoods.Length];
         }
 
         public Tuple<int, int> getLocation()

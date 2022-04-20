@@ -30,6 +30,7 @@ namespace SpaceSimulation.Empires
                 foreach (Station s in this.stations)
                 {
                     s.saturateMines(ws);
+                    s.build(ws, 5);
                 }
             }
 
@@ -39,6 +40,7 @@ namespace SpaceSimulation.Empires
                 {
                     s.moveVehicles(ws);
                     s.build(ws, 3);
+                    s.build(ws, 4);
                     s.runFacilities(ws);
                 }
             }
