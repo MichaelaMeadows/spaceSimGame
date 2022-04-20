@@ -52,14 +52,17 @@ namespace SpaceSimulation.Bases
             // Probably add a spaceport?
             Smelter smelter = new Smelter();
             Starport port = new Starport();
+            Fabricator fab = new Fabricator();
             this.facilities = new List<Facility>();
             facilities.Add(smelter);
             facilities.Add(port);
+            facilities.Add(fab);
             pendingCommands = new List<Command>();
 
             waitingTasks = new Dictionary<Facility, List<Command>>();
             waitingTasks[smelter] = new List<Command>();
             waitingTasks[port] = new List<Command>();
+            waitingTasks[fab] = new List<Command>();
         }
 
         private void populateCloseNodes(WorldState state)
@@ -136,20 +139,19 @@ namespace SpaceSimulation.Bases
             // TODO remove null. Need another pattern.
             Build b = new Build(this, target, null);
             // recursively build or gather the requirements?
+            // TODO support multiple valid facilities
             foreach (Facility f in this.facilities)
             {
-                if (f.canTakeCommand(b))
+                if (f.isEligible(b))
                 {
-                    // Facility can take the command, and we can pay for it.
                     if (Spending.buildIfPossible(this.goods, ws.marketplace.goods[target].cost))
                     {
                         b = new Build(this, target, f);
-                        f.addCommand(b);
+                        this.waitingTasks[f].Add(b);
                         return true;
                     }
                 }
             }
-            this.desiredGoods[target] += 1;
             return false;
         }
 
@@ -165,15 +167,16 @@ namespace SpaceSimulation.Bases
             BuildVehicle b = new BuildVehicle(this, v1, null);
             foreach (Facility f in this.facilities)
             {
-                if (f.canTakeCommand(b))
+                if (f.isEligible(b))
                 {
                     if (Spending.buildIfPossible(this.goods, v1.getCost()))
                     {
                         //this.vehicles.Add(v1);
                         // ws.placeObject(v1, location.Item1, location.Item2);
                         b = new BuildVehicle(this, v1, f);
-                        f.addCommand(b);
+                        this.waitingTasks[f].Add(b);
                         return true;
+
                     }
                 }
             }
@@ -260,6 +263,26 @@ namespace SpaceSimulation.Bases
         {
             foreach (Facility f in this.facilities)
             {
+                // Remove need for obsessive null checks
+                if (f.executingCommands() == null 
+                    || f.executingCommands().Count == 0
+                    || f.executingCommands()[0] == null
+                    || f.executingCommands()[0].getState() == CommandState.SUCCESS)
+                {
+                    List<Command> actedTasks = new List<Command>();
+                    foreach (Command c in waitingTasks[f])
+                    {
+                        if (f.canTakeCommand(c))
+                        {
+                            actedTasks.Add(c);
+                            f.addCommand(c);
+                        }
+                    }
+                    foreach(Command c in actedTasks)
+                    {
+                        waitingTasks[f].Remove(c);
+                    }
+                }
                 if (f.executingCommands() != null)
                 {
                     f.execute(ws);
