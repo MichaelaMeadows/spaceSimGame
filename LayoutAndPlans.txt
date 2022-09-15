@@ -1,0 +1,34 @@
+﻿This is a description of the program mental model. It also captures thoughts on next steps.
+
+
+The general control flow is intended to be:
+1. The game asks each empire to decide what to do
+2. Empires have strategies that they use to generate objectives, and actions to go after them.
+3. These actions are performed by bases/units/ships and then we move on and repeat.
+
+Of the above, the strategy layer is the next major objective, but I'm having a hard time deciding on how to value objectives.
+It's also hard to write strategies since each base operates independantly, but contributes to an overall strategic objective.
+
+
+
+Here is the rough class layout in the folders
+Bases: Contains the structures for production and storage.
+Commands: These are objects that once created, tell the game how to update a thing.
+Components: Base classes for products
+Empires: The "player"  entitites
+Helpers: Useful functions like computing prices, calcualting distances, etc
+Nodes: resource mining locations
+Ships: These are intended to be "large" combat ships
+Vehicles: semi-mindless automated logistics ships. 
+Global / World state maintain stuff.
+
+Notes on how the "engine works"
+* I work on a tick system that resets on every 1 minute loop.
+* The map is separated into logical array blocks to help with finding relevant entities efficiently.
+
+
+Thoughts on strategy: (Econ, Research, Military? Does there need to be another theme that will dynamically compete?)
+1. Econ start, first staurate mines, then build basic components to hit some threshold. Then consider "other" stuff, wahtever that means.
+
+
+

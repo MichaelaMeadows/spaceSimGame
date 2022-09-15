@@ -28,6 +28,10 @@ namespace SpaceSimulation.Commands
         }
         public void execute(WorldState ws)
         {
+            if (this.target == 6)
+            {
+                this.target = this.target;
+            }
             if (state.Equals(CommandState.SUCCESS))
             {
                 return;

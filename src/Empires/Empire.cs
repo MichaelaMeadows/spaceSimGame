@@ -2,6 +2,7 @@
 using SpaceSimulation.Ships;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace SpaceSimulation.Empires
 {
@@ -30,9 +31,22 @@ namespace SpaceSimulation.Empires
             // Move ships
             if (tickCount % 60 == 0)
             {
+/*               // Debug.WriteLine("Station Dump");
+                foreach (Station s in this.stations)
+                {
+                   // Debug.WriteLine("Goods");
+                    foreach (int x in s.goods)
+                    {
+                        
+                    }
+                    //Debug.WriteLine("Goods " + s.pendingCommands.Count);
+                }*/
+
+
                 foreach (Station s in this.stations)
                 {
                     s.saturateMines(ws);
+                    // These are tests to build specific things?
                     s.build(ws, 5);
                     s.build(ws, 6);
                 }

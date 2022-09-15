@@ -7,7 +7,7 @@ using System.Text;
 
 namespace SpaceSimulation.src.Empires
 {
-    class ResearchStrategy : Strategy
+    class EconomicStrategy : Strategy
     {
         public int getScore()
         {

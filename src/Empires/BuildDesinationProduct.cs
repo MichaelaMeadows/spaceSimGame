@@ -8,6 +8,7 @@ using System.Text;
 namespace SpaceSimulation.src.Empires
 {
     // Works towards an end product, building intermediates if needed.
+    // Is a short hand to be used in strategies.
     class BuildDesinationProduct : EmpireCommand
     {
         // Identify candidate stations, or create a facility in a station if needed.

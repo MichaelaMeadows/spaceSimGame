@@ -29,7 +29,7 @@ namespace SpaceSimulation.Bases
         }
         public bool canTakeCommand(Command c)
         {
-            if (this.command == null || this.command.getState() != CommandState.PROGRESS) {
+            if (this.command == null || (this.command.getState() != CommandState.PROGRESS && this.command.getState() != CommandState.CREATED)) {
                 return isEligible(c);
             }
             return false;

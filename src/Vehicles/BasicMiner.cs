@@ -28,10 +28,11 @@ namespace SpaceSimulation.Vehicles
 
         public List<int[]> getCost()
         {
+            // TODO fix cost.
             List<int[]> cost = new List<int[]>();
             int[] c = new int[2];
             c[0] = 3;
-            c[1] = 100;
+            c[1] = 3;
             cost.Add(c);
             return cost;
         }
