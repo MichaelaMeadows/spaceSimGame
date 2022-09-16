@@ -127,7 +127,7 @@ namespace SpaceSimulation
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.DarkBlue);
+            GraphicsDevice.Clear(Color.Black);
             // Prepare map scaling
             var mapViewSize = worldState.mapViewSize;
             var heightScale = (double) GraphicsDevice.Viewport.Height / mapViewSize;

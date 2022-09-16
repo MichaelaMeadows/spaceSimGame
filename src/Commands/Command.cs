@@ -8,7 +8,6 @@ namespace SpaceSimulation.Commands
     interface Command
     {
         public void execute(WorldState ws);
-
         public CommandState getState();
 
     }

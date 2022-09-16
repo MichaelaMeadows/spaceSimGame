@@ -3,6 +3,7 @@ using SpaceSimulation.components;
 using SpaceSimulation.Components;
 using SpaceSimulation.Helpers;
 using SpaceSimulation.Nodes;
+using SpaceSimulation.Ships;
 using SpaceSimulation.src.Bases;
 using SpaceSimulation.src.Commands;
 using SpaceSimulation.src.Helpers;
@@ -43,7 +44,7 @@ namespace SpaceSimulation.Bases
             vehicles = new List<Vehicle>();
             this.goods = new int[state.marketplace.goods.Length];
             this.desiredGoods = new int[state.marketplace.goods.Length];
-            this.goods[0] += 30000;
+            this.goods[0] += 1000;
 
             closeNodes = new List<Node>[WorldState.RESOURCE_COUNT];
             populateCloseNodes(state);
@@ -142,6 +143,13 @@ namespace SpaceSimulation.Bases
             // TODO support multiple valid facilities
             foreach (Facility f in this.facilities)
             {
+                // TODO Be aware that if multiple facilities can build the same thing, this could cause a bug.
+                // It will return and fail as soon as one fails to build, even if the other has capacity.
+                if (this.waitingTasks[f].Count > 25)
+                {
+                    return false;
+                }
+
                 if (f.isEligible(b))
                 {
                     if (Spending.buildIfPossible(this.goods, ws.marketplace.goods[target].cost))
@@ -158,11 +166,11 @@ namespace SpaceSimulation.Bases
         // TODO assign what kind with weight?
         // Create a build task which takes some time?
         // Create a default starport facility?
-        public bool buildVehicle(WorldState ws)
+        public bool buildVehicle(WorldState ws, Vehicle v1)
         {
             // TODO clearly make objects with settings. Extract to json someday
-            Tuple<int, int> location = new Tuple<int, int>(this.location.Item1 + r.Next(-1, 1), this.location.Item2 + r.Next(-1, 1));
-            BasicMiner v1 = new BasicMiner(location);
+            //Tuple<int, int> location = new Tuple<int, int>(this.location.Item1 + r.Next(-1, 1), this.location.Item2 + r.Next(-1, 1));
+            //BasicMiner v1 = new BasicMiner(location);
             // The check also spends the resources
             BuildVehicle b = new BuildVehicle(this, v1, null);
             foreach (Facility f in this.facilities)
@@ -183,6 +191,32 @@ namespace SpaceSimulation.Bases
            // if (pendingCommands.Count < 50) { pendingCommands.Add(b); }
             return false;
         }
+
+      /*  public bool buildShip(WorldState ws, Ship s1)
+        {
+            // TODO clearly make objects with settings. Extract to json someday
+            //Tuple<int, int> location = new Tuple<int, int>(this.location.Item1 + r.Next(-1, 1), this.location.Item2 + r.Next(-1, 1));
+            //BasicMiner v1 = new BasicMiner(location);
+            // The check also spends the resources
+            BuildVehicle b = new BuildVehicle(this, s1, null);
+            foreach (Facility f in this.facilities)
+            {
+                if (f.isEligible(b))
+                {
+                    if (Spending.buildIfPossible(this.goods, s1.getCost()))
+                    {
+                        //this.vehicles.Add(v1);
+                        // ws.placeObject(v1, location.Item1, location.Item2);
+                        b = new BuildVehicle(this, s1, f);
+                        this.waitingTasks[f].Add(b);
+                        return true;
+
+                    }
+                }
+            }
+            // if (pendingCommands.Count < 50) { pendingCommands.Add(b); }
+            return false;
+        }*/
 
         // TODO assign resource with weight?
         // Figures out how mnay miners it wishes to have available.
@@ -226,7 +260,9 @@ namespace SpaceSimulation.Bases
             }
             for (int i = 0; i < (targetCount - minerCount); i++)
             {
-                this.buildVehicle(ws);
+                Tuple<int, int> location = new Tuple<int, int>(this.location.Item1 + r.Next(-1, 1), this.location.Item2 + r.Next(-1, 1));
+                BasicMiner v1 = new BasicMiner(location);
+                this.buildVehicle(ws, v1);
             }
 
             //Assign lacking miners to nodes

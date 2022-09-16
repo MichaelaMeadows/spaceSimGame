@@ -71,5 +71,41 @@
         2
       ]
     ]
+  },
+  {
+    "name": "alloyPlate",
+    "id": 7,
+    "size": 2,
+    "buildEffort": 2,
+    "cost": [
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        2
+      ]
+    ]
+  },
+  {
+    "name": "basicOrdinance",
+    "id": 8,
+    "size": 1,
+    "buildEffort": 1,
+    "cost": [
+      [
+        3,
+        2
+      ],
+      [
+        4,
+        1
+      ],
+	  [
+        6,
+        1
+      ]
+    ]
   }
 ]

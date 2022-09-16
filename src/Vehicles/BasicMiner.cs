@@ -26,7 +26,7 @@ namespace SpaceSimulation.Vehicles
             return VehicleType.MINER;
         }
 
-        public List<int[]> getCost()
+        public override List<int[]> getCost()
         {
             // TODO fix cost.
             List<int[]> cost = new List<int[]>();

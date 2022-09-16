@@ -1,5 +1,6 @@
 ﻿using SpaceSimulation.Bases;
 using SpaceSimulation.Ships;
+using SpaceSimulation.src.Empires;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -14,6 +15,8 @@ namespace SpaceSimulation.Empires
         public int playerId;
         private int[] researchPoints;
         private Random r = new Random();
+
+        private EconomicStrategy e_strategy = new EconomicStrategy();
         public Empire()
         {
             funds = 100;
@@ -25,40 +28,23 @@ namespace SpaceSimulation.Empires
         // Each empire independantly assigns tasks to resources it controls. After task assignment, the game executes each step.
         public void executeStrategy(WorldState ws, int tickCount)
         {
-            // Create strategy
-            // Order stations
-            // Move vehicles
-            // Move ships
+            // TODO saturation should probably live in the strategy level.
             if (tickCount % 60 == 0)
             {
-/*               // Debug.WriteLine("Station Dump");
-                foreach (Station s in this.stations)
-                {
-                   // Debug.WriteLine("Goods");
-                    foreach (int x in s.goods)
-                    {
-                        
-                    }
-                    //Debug.WriteLine("Goods " + s.pendingCommands.Count);
-                }*/
-
-
                 foreach (Station s in this.stations)
                 {
                     s.saturateMines(ws);
-                    // These are tests to build specific things?
-                    s.build(ws, 5);
-                    s.build(ws, 6);
                 }
             }
 
+            // Move vehicles
+            // Move ships
             if (tickCount % 3 == 0)
             {
+                e_strategy.getStationCommands(ws, this);
                 foreach (Station s in this.stations)
                 {
                     s.moveVehicles(ws);
-                    s.build(ws, 3);
-                    s.build(ws, 4);
                     s.runFacilities(ws);
                 }
             }

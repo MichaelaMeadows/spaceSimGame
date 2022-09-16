@@ -27,6 +27,11 @@ namespace SpaceSimulation.src.Empires
                     validStations.Add(s);
                 }
             }
+
+            foreach (var s in validStations)
+            {
+
+            }
         }
 
         public bool hasMatchingFacility(Station s, Command b)

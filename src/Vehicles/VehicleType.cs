@@ -8,6 +8,7 @@ namespace SpaceSimulation.src.Vehicles
     {
         MINER,
         TRANSPORT,
-        EXPLORER
+        EXPLORER,
+        FRIGATE
     }
 }

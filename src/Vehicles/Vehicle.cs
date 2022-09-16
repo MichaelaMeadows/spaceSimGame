@@ -61,5 +61,11 @@ namespace SpaceSimulation.Vehicles
             }
             this.location = location;
         }
+
+        public virtual List<int[]> getCost()
+        {
+            // All ships must override
+            return null;
+        }
     }
 }

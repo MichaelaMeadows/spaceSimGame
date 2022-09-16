@@ -1,8 +1,4 @@
 ﻿using SpaceSimulation.Bases;
-using SpaceSimulation.components;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SpaceSimulation.Commands
 {
@@ -28,10 +24,6 @@ namespace SpaceSimulation.Commands
         }
         public void execute(WorldState ws)
         {
-            if (this.target == 6)
-            {
-                this.target = this.target;
-            }
             if (state.Equals(CommandState.SUCCESS))
             {
                 return;
@@ -47,7 +39,6 @@ namespace SpaceSimulation.Commands
                 state = CommandState.SUCCESS;
                 s.goods[target] += 1;
             }
-
         }
         public CommandState getState()
         {
