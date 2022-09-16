@@ -12,43 +12,49 @@ namespace SpaceSimulation.src.Empires
     class EconomicStrategy : Strategy
     {
         WorldState ws;
+        Empire empire;
+        public EconomicStrategy(WorldState ws, Empire e)
+        {
+            this.ws = ws;
+            this.empire = e;
+        }
         /*
          * Economic strategy considers requests from research and military. 
          * It also reviews current resource and tech level to get a sense of waht to go after.
          */
         // Stateful capture of goals from other layers? Perhaps a heap of values items?
-        
+
         public int getScore()
         {
             throw new NotImplementedException();
         }
 
-        public List<EmpireCommand> getShipCommands(WorldState ws, Empire e)
+        public List<EmpireCommand> getShipCommands()
         {
             throw new NotImplementedException();
         }
 
 
-        public List<EmpireCommand> getStationCommands(WorldState ws, Empire e)
+        public List<EmpireCommand> executeStrategy()
         {
             // TODO Don't do this per request in the future;
             this.ws = ws;
             // Stations make resources in priority from simplest to most advanced.
             // When there are multiple stations in later game, they learn to assign specializations and then transport. (Big TODO)
             List<EmpireCommand> commands = new List<EmpireCommand>();
-            foreach (Station s in e.stations)
+            foreach (Station s in empire.stations)
             {
                 // Base resource storage
                 // TODO - It assumes that this can over shoot with work queing in the facility/station list of things to do.
 
                 //Iron
-                buildToThresholdIfPossible(ws, e, s, 3, 100);
+                buildToThresholdIfPossible(s, 3, 100);
                 // Copper
-                buildToThresholdIfPossible(ws, e, s, 4, 100);
+                buildToThresholdIfPossible(s, 4, 100);
                 // Circuits
-                buildToThresholdIfPossible(ws, e, s, 5, 50);
+                buildToThresholdIfPossible(s, 5, 50);
                 // Hydro cells
-                buildToThresholdIfPossible(ws, e, s, 6, 100);
+                buildToThresholdIfPossible(s, 6, 100);
 
                 // Building complex products
                 // First identify the station that will do it, then slowly build towards it until done. Do not thrash.
@@ -92,7 +98,7 @@ namespace SpaceSimulation.src.Empires
             return built;
         }
 
-        public void buildToThresholdIfPossible(WorldState ws, Empire e, Station s, int item, int cap)
+        public void buildToThresholdIfPossible(Station s, int item, int cap)
         {
             if (Spending.canAfford(s.goods, ws.marketplace.goods[item].cost) && s.goods[item] < cap)
             {
@@ -101,7 +107,7 @@ namespace SpaceSimulation.src.Empires
 
         }
 
-        public List<EmpireCommand> getVehicleCommands(WorldState ws, Empire e)
+        public List<EmpireCommand> getVehicleCommands()
         {
             throw new NotImplementedException();
         }

@@ -67,7 +67,7 @@ namespace SpaceSimulation
             empires = new List<Empire>();
             for (int i = 0; i < 20; i++)
             {
-                Empire e1 = new Empire();
+                Empire e1 = new Empire(worldState);
                 empires.Add(e1);
                 int x = r.Next(15, worldState.getMapSize() - 10);
                 int y = r.Next(15, worldState.getMapSize() - 10);
@@ -80,6 +80,7 @@ namespace SpaceSimulation
             textureMap.Add("iron", Content.Load<Texture2D>("iron"));
             textureMap.Add("copper", Content.Load<Texture2D>("copper"));
             textureMap.Add("ship1", Content.Load<Texture2D>("ship1"));
+            textureMap.Add("frigate1", Content.Load<Texture2D>("frigate1"));
             textureMap.Add("spacestation", Content.Load<Texture2D>("spacestation"));
             textureMap.Add("smallCar", Content.Load<Texture2D>("smallCar"));
             textureMap.Add("hydrogen", Content.Load<Texture2D>("hydrogen"));

@@ -1,5 +1,6 @@
 ﻿using SpaceSimulation.Bases;
 using SpaceSimulation.Commands;
+using SpaceSimulation.src.Vehicles;
 using SpaceSimulation.Vehicles;
 
 namespace SpaceSimulation.src.Commands
@@ -38,9 +39,14 @@ namespace SpaceSimulation.src.Commands
             if (progress >= neededWork)
             {
                 state = CommandState.SUCCESS;
-                s.vehicles.Add(v);
+                if (VehicleType.FRIGATE.Equals(v.getVehicleType()))
+                {
+                    s.combatShips.Add(v);
+                } else
+                {
+                    s.vehicles.Add(v);
+                }
             }
-
         }
         public CommandState getState()
         {

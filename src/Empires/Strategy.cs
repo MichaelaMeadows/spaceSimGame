@@ -10,8 +10,8 @@ namespace SpaceSimulation.src
     interface Strategy
     {
         public int getScore();
-        public List<EmpireCommand> getStationCommands(WorldState ws, Empire e);
-        public List<EmpireCommand> getVehicleCommands(WorldState ws, Empire e);
-        public List<EmpireCommand> getShipCommands(WorldState ws, Empire e);
+        public List<EmpireCommand> executeStrategy();
+        //public List<EmpireCommand> getVehicleCommands();
+        //public List<EmpireCommand> getShipCommands();
     }
 }

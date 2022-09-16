@@ -18,14 +18,15 @@ namespace SpaceSimulation.src.Ships
             this.name = "frigate";
             this.location = location;
             this.speed = 3;
+            this.health = 100;
+            this.armor = 5;
+            this.shield = 30;
+            this.shield_recharge = 1;
+            this.buildEffort = 20;
         }
         public int id { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public int buildEffort { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public int fuel { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public int fuelPerUnit { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public int health { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public int armor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public int shield { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         override public string getSprite()
         {
@@ -35,6 +36,10 @@ namespace SpaceSimulation.src.Ships
         override public VehicleType getVehicleType()
         {
             return VehicleType.FRIGATE;
+        }
+        override public int getSize()
+        {
+            return 22;
         }
 
         public override List<int[]> getCost()

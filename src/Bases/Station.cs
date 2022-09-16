@@ -26,6 +26,7 @@ namespace SpaceSimulation.Bases
         public int health { get; set; }
         public Tuple<int, int> location;
         public List<Vehicle> vehicles;
+        public List<Vehicle> combatShips;
         private Random r = new Random();
 
         private List<Node>[] closeNodes;
@@ -42,6 +43,7 @@ namespace SpaceSimulation.Bases
         {
             location = position;
             vehicles = new List<Vehicle>();
+            combatShips = new List<Vehicle>();
             this.goods = new int[state.marketplace.goods.Length];
             this.desiredGoods = new int[state.marketplace.goods.Length];
             this.goods[0] += 1000;

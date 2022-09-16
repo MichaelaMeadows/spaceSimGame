@@ -1,5 +1,6 @@
 ﻿using SpaceSimulation.Commands;
 using SpaceSimulation.Components;
+using SpaceSimulation.src.Ships;
 using SpaceSimulation.src.Vehicles;
 using System;
 using System.Collections.Generic;
@@ -22,10 +23,12 @@ namespace SpaceSimulation.Vehicles
         public int health { get; set; }
         public int armor { get; set; }
         public int shield { get; set; }
+        public int shield_recharge { get; set; }
         public int miningpower { get; set; }
         public Tuple<int, int> location { get; set; }
         public Command command { get; set; }
         public int[] goodsManifest;
+        public Weapon[] weapons { get; set; }
 
         public Vehicle(Tuple<int, int> location)
         {
@@ -38,7 +41,7 @@ namespace SpaceSimulation.Vehicles
             return location;
         }
 
-        public int getSize()
+        public virtual int getSize()
         {
             return 10;
         }
