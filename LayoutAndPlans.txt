@@ -29,6 +29,16 @@ Notes on how the "engine works"
 
 Thoughts on strategy: (Econ, Research, Military? Does there need to be another theme that will dynamically compete?)
 1. Econ start, first staurate mines, then build basic components to hit some threshold. Then consider "other" stuff, wahtever that means.
+2. Military / research designate requests to econ, which otherwise just creates a baseline workflow?
 
 
+* I now have recursive building working for higher level objects.
+* 
 
+Next steps:
+* Implement search and destroy for ship v ship and basic combat.
+* Consider creating basic GUI elements?
+* Basic research?
+* Marketplace and trade?
+* More AI art assets!!!
+* Add in things like signature size, speed, etc for weapon stuff?

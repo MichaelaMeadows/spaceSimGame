@@ -23,6 +23,7 @@ namespace SpaceSimulation.src.Ships
             this.shield = 30;
             this.shield_recharge = 1;
             this.buildEffort = 20;
+            this.weapons = new Weapon[6];
         }
         public int id { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public int fuel { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }

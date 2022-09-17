@@ -28,6 +28,12 @@ namespace SpaceSimulation
         // All goods are pre-determined, and exist in a fixed-sized array for performance.
         public Marketplace marketplace;
         public static int RESOURCE_COUNT = 4;
+        Random r = new Random();
+
+        internal Tuple<int, int> getRandomLocation()
+        {
+            return new Tuple<int, int>(r.Next(MAP_SIZE), r.Next(MAP_SIZE));
+        }
 
         public WorldState()
         {
@@ -92,6 +98,12 @@ namespace SpaceSimulation
             entity.setLocation(new Tuple<int, int>(x, y));
             map[x / BOX_SIZE, y / BOX_SIZE].Add(entity);
         }
+        public void removeObject(Entity entity)
+        {
+            // TODO check for collision???
+            map[entity.getLocation().Item1 / BOX_SIZE, entity.getLocation().Item2 / BOX_SIZE].Remove(entity);
+        }
+
         public List<Entity> GetObjectsInView(int x, int y)
         {
             List<Entity> found = new List<Entity>();

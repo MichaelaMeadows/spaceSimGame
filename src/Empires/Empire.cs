@@ -49,6 +49,7 @@ namespace SpaceSimulation.Empires
             {
 
                 e_strategy.executeStrategy();
+                m_strategy.executeStrategy();
                 foreach (Station s in this.stations)
                 {
                     s.moveVehicles(ws);

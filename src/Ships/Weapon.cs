@@ -4,7 +4,10 @@ using System.Text;
 
 namespace SpaceSimulation.src.Ships
 {
-    class Weapon
+    interface Weapon
     {
+        // Add damage type?
+        // Splash?
+        // Physics model, or hitscan?
     }
 }
