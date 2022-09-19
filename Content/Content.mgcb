@@ -13,6 +13,33 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin copper.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:copper.jpg
+
+#begin goodsList.json
+/copy:goodsList.json
+
+#begin hydrogen.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:hydrogen.jpg
+
 #begin iron.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -25,6 +52,21 @@
 /processorParam:TextureFormat=Color
 /build:iron.png
 
+#begin nodeSettings.json
+/copy:nodeSettings.json
+
+#begin seed_745031_00001.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:seed_745031_00001.png;frigate1.png
+
 #begin ship1.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -36,4 +78,28 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:ship1.jpg
+
+#begin smallCar.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:smallCar.jpg
+
+#begin spacestation.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:spacestation.jpg
 

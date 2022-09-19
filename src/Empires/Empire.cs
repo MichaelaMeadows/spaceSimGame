@@ -14,6 +14,7 @@ namespace SpaceSimulation.Empires
         public List<Ship> ships;
         public int funds;
         public int playerId;
+        public int empireId;
         private int[] researchPoints;
         private Random r = new Random();
 
@@ -21,7 +22,7 @@ namespace SpaceSimulation.Empires
         private EconomicStrategy e_strategy;
         private MilitaryStrategy m_strategy;
 
-        public Empire(WorldState ws)
+        public Empire(WorldState ws, int empireId)
         {
             funds = 100;
             stations = new List<Station>();
@@ -30,12 +31,13 @@ namespace SpaceSimulation.Empires
             researchPoints = new int[10];
             e_strategy = new EconomicStrategy(ws, this);
             m_strategy = new MilitaryStrategy(ws, this);
-    }
+            this.empireId = empireId;
+        }
         // Each empire independantly assigns tasks to resources it controls. After task assignment, the game executes each step.
         public void executeStrategy(WorldState ws, int tickCount)
         {
             // TODO saturation should probably live in the strategy level.
-            if (tickCount % 60 == 0)
+            if (tickCount % 180 == 0)
             {
                 foreach (Station s in this.stations)
                 {

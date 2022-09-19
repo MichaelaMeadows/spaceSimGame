@@ -19,6 +19,7 @@ namespace SpaceSimulation.Bases
     {
         public String name { get; set; }
         public int id { get; set; }
+        public int empireId { get; set; }
         public int[] goods { get; set; }
         public int[] desiredGoods { get; set; }
         public int facilitySpace;
@@ -37,9 +38,11 @@ namespace SpaceSimulation.Bases
 
         public Dictionary<Facility, List<Command>> waitingTasks;
 
+        private int fullTargetCount = 100000000;
+
         // Create a lit of build commands to process?
 
-        public Station(Tuple<int, int> position, WorldState state)
+        public Station(Tuple<int, int> position, WorldState state, int empireId)
         {
             location = position;
             vehicles = new List<Vehicle>();
@@ -47,6 +50,7 @@ namespace SpaceSimulation.Bases
             this.goods = new int[state.marketplace.goods.Length];
             this.desiredGoods = new int[state.marketplace.goods.Length];
             this.goods[0] += 1000;
+            this.goods[1] += 100;
 
             closeNodes = new List<Node>[WorldState.RESOURCE_COUNT];
             populateCloseNodes(state);
@@ -66,6 +70,7 @@ namespace SpaceSimulation.Bases
             waitingTasks[smelter] = new List<Command>();
             waitingTasks[port] = new List<Command>();
             waitingTasks[fab] = new List<Command>();
+            this.empireId = empireId;
         }
 
         private void populateCloseNodes(WorldState state)
@@ -81,7 +86,8 @@ namespace SpaceSimulation.Bases
             {
                 int type = n.type;
                 Double distance = Distances.distance(this.location, n.location);
-                if (distance < 3000)
+                // TODO Maybe not such an arbitrary radius
+                if (distance < 4500)
                 {
                     if(tmp_nodes[type].Count < CLOSE_ORE_COUNT)
                     {
@@ -99,8 +105,7 @@ namespace SpaceSimulation.Bases
                                 // TODO. More elegant soluton could be good!
                                 tmp_nodes[type].Add(distance + .000000001, n);
                             }
-                        }
-                        
+                        }  
                     }
                 }
             }
@@ -170,9 +175,6 @@ namespace SpaceSimulation.Bases
         // Create a default starport facility?
         public bool buildVehicle(WorldState ws, Vehicle v1)
         {
-            // TODO clearly make objects with settings. Extract to json someday
-            //Tuple<int, int> location = new Tuple<int, int>(this.location.Item1 + r.Next(-1, 1), this.location.Item2 + r.Next(-1, 1));
-            //BasicMiner v1 = new BasicMiner(location);
             // The check also spends the resources
             BuildVehicle b = new BuildVehicle(this, v1, null);
             foreach (Facility f in this.facilities)
@@ -181,44 +183,15 @@ namespace SpaceSimulation.Bases
                 {
                     if (Spending.buildIfPossible(this.goods, v1.getCost()))
                     {
-                        //this.vehicles.Add(v1);
-                        // ws.placeObject(v1, location.Item1, location.Item2);
                         b = new BuildVehicle(this, v1, f);
                         this.waitingTasks[f].Add(b);
                         return true;
-
                     }
                 }
             }
            // if (pendingCommands.Count < 50) { pendingCommands.Add(b); }
             return false;
         }
-
-      /*  public bool buildShip(WorldState ws, Ship s1)
-        {
-            // TODO clearly make objects with settings. Extract to json someday
-            //Tuple<int, int> location = new Tuple<int, int>(this.location.Item1 + r.Next(-1, 1), this.location.Item2 + r.Next(-1, 1));
-            //BasicMiner v1 = new BasicMiner(location);
-            // The check also spends the resources
-            BuildVehicle b = new BuildVehicle(this, s1, null);
-            foreach (Facility f in this.facilities)
-            {
-                if (f.isEligible(b))
-                {
-                    if (Spending.buildIfPossible(this.goods, s1.getCost()))
-                    {
-                        //this.vehicles.Add(v1);
-                        // ws.placeObject(v1, location.Item1, location.Item2);
-                        b = new BuildVehicle(this, s1, f);
-                        this.waitingTasks[f].Add(b);
-                        return true;
-
-                    }
-                }
-            }
-            // if (pendingCommands.Count < 50) { pendingCommands.Add(b); }
-            return false;
-        }*/
 
         // TODO assign resource with weight?
         // Figures out how mnay miners it wishes to have available.
@@ -227,9 +200,19 @@ namespace SpaceSimulation.Bases
         // Perhaps someday choose not to build all miners, or not mine some things?
         public void saturateMines(WorldState ws)
         {
+            if (this.vehicles.Count >= fullTargetCount)
+            {
+                return;
+            }
+
             int minerCount = 0;
             Dictionary<Node, int> nodeAssignmentCount = new Dictionary<Node, int>();
             List<BasicMiner> unassignedMiners = new List<BasicMiner>();
+            BasicMiner t1 = new BasicMiner(null, 0);
+            double miningRate = t1.miningpower;
+            double minCapacity = t1.capacity;
+            double speed = t1.speed;
+            t1 = null;
             foreach (Vehicle v in vehicles)
             {
                 if (v.getVehicleType() == VehicleType.MINER)
@@ -247,25 +230,40 @@ namespace SpaceSimulation.Bases
                 }
             }
             int targetCount = 0;
+            double fillTime = (minCapacity / miningRate);
+
+            List<Node> flattenedList = new List<Node>();
             foreach (List<Node> l in closeNodes)
             {
-                foreach (Node n in l)
-                {
-                    // The further away, and the bigger, the more miners we want.
-                    targetCount += (int)(n.outputVolume * ((Distances.distance(n.getLocation(), this.getLocation())) / 300));
-                    targetCount = Math.Max(targetCount, 1);
-                    if (!nodeAssignmentCount.ContainsKey(n))
-                    {
-                        nodeAssignmentCount.Add(n, 0);
-                    }
+                flattenedList.AddRange(l);
+            }
+            flattenedList.Sort((n1, n2) => 
+            (int)(Distances.distance(n2.getLocation(), this.getLocation()) 
+            - Distances.distance(n1.getLocation(), this.getLocation())));
+
+            foreach (Node n in flattenedList) {
+                // The further away, and the bigger, the more miners we want.
+                double distance = Distances.distance(n.getLocation(), this.getLocation());
+                double travelTime = (distance / speed);
+
+                double miningRatio = (miningRate / n.outputVolume) * (fillTime / (fillTime + (2 * travelTime)));
+                targetCount += (int)(1 / miningRatio);
+
+                targetCount = Math.Max(targetCount, 1);
+                // TODO - Is this same? I think rounding truncates the last miner.
+                targetCount += 1;
+                if (!nodeAssignmentCount.ContainsKey(n)) {
+                    nodeAssignmentCount.Add(n, 0);
                 }
             }
+
             for (int i = 0; i < (targetCount - minerCount); i++)
             {
                 Tuple<int, int> location = new Tuple<int, int>(this.location.Item1 + r.Next(-1, 1), this.location.Item2 + r.Next(-1, 1));
-                BasicMiner v1 = new BasicMiner(location);
+                BasicMiner v1 = new BasicMiner(location, empireId);
                 this.buildVehicle(ws, v1);
             }
+            fullTargetCount = targetCount;
 
             //Assign lacking miners to nodes
             foreach (var obj in nodeAssignmentCount)
@@ -284,8 +282,8 @@ namespace SpaceSimulation.Bases
                     }
                 }
             }
-    
         }
+
         public void moveVehicles(WorldState ws)
         {
             foreach (Vehicle v in this.vehicles)

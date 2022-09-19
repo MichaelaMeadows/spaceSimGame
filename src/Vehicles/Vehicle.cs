@@ -13,6 +13,7 @@ namespace SpaceSimulation.Vehicles
     {
         public String name { get; set; }
         public int id { get; set; }
+        public int empire { get; set; }
         public List<Tuple<int, int>> cost { get; set; }
         public int buildEffort { get; set; }
         public int speed { get; set; }
@@ -30,10 +31,11 @@ namespace SpaceSimulation.Vehicles
         public int[] goodsManifest;
         public Weapon[] weapons { get; set; }
 
-        public Vehicle(Tuple<int, int> location)
+        public Vehicle(Tuple<int, int> location, int empire)
         {
             this.location = location;
             goodsManifest = new int[Global.gameGoods.Length];
+            this.empire = empire;
         }
 
         public Tuple<int, int> getLocation()

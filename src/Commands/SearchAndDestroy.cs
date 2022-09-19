@@ -56,9 +56,9 @@ namespace SpaceSimulation.src.Commands
                 }
             }
             
-            engageTargets(closeEntities);
+            engageTargets(closeEntities, v.empire);
         }
-        private void engageTargets(List<Vehicle> closeEntities)
+        private void engageTargets(List<Vehicle> closeEntities, int empire)
         {
             foreach (Weapon w in v.weapons)
             {
@@ -67,6 +67,7 @@ namespace SpaceSimulation.src.Commands
 
             foreach(Vehicle ce in closeEntities)
             {
+                if (ce.empire != empire)
                 // Instant boom
                 ce.health = 0;
             }

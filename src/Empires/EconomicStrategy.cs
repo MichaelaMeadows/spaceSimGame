@@ -34,11 +34,8 @@ namespace SpaceSimulation.src.Empires
             throw new NotImplementedException();
         }
 
-
         public List<EmpireCommand> executeStrategy()
         {
-            // TODO Don't do this per request in the future;
-            this.ws = ws;
             // Stations make resources in priority from simplest to most advanced.
             // When there are multiple stations in later game, they learn to assign specializations and then transport. (Big TODO)
             List<EmpireCommand> commands = new List<EmpireCommand>();
@@ -48,17 +45,19 @@ namespace SpaceSimulation.src.Empires
                 // TODO - It assumes that this can over shoot with work queing in the facility/station list of things to do.
 
                 //Iron
-                buildToThresholdIfPossible(s, 3, 100);
-                // Copper
-                buildToThresholdIfPossible(s, 4, 100);
-                // Circuits
-                buildToThresholdIfPossible(s, 5, 50);
-                // Hydro cells
-                buildToThresholdIfPossible(s, 6, 100);
-
+                if (s.goods[0] > 50 && s.goods[1] > 25)
+                {
+                    buildToThresholdIfPossible(s, 3, 100);
+                    // Copper
+                    buildToThresholdIfPossible(s, 4, 100);
+                    // Circuits
+                    buildToThresholdIfPossible(s, 5, 50);
+                    // Hydro cells
+                    buildToThresholdIfPossible(s, 6, 100);
+                }
                 // Building complex products
                 // First identify the station that will do it, then slowly build towards it until done. Do not thrash.
-                Frigate f1 = new Frigate(s.getLocation());
+                Frigate f1 = new Frigate(s.getLocation(), empire.empireId);
                 // If we can't build, make progress towards it.
                 // There's probably some checks to make sure it's even possible or something.
                 if (s.goods[3] > 75 && !s.buildVehicle(ws, f1))
@@ -106,7 +105,6 @@ namespace SpaceSimulation.src.Empires
             }
 
         }
-
         public List<EmpireCommand> getVehicleCommands()
         {
             throw new NotImplementedException();

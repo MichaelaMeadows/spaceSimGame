@@ -1,3 +1,10 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
+"G:/Monogame/SimGame/SpaceSimulation/SpaceSimulation/Content/copper.jpg","G:/Monogame/SimGame/SpaceSimulation/SpaceSimulation/Content/bin/DesktopGL/Content/copper.xnb","TextureProcessor","Texture2DContent",9163,202333,0.1156389
+"G:/Monogame/SimGame/SpaceSimulation/SpaceSimulation/Content/goodsList.json","G:\Monogame\SimGame\SpaceSimulation\SpaceSimulation\Content\bin\DesktopGL\Content\goodsList.json","CopyItem","File",974,974,0.0012718
+"G:/Monogame/SimGame/SpaceSimulation/SpaceSimulation/Content/hydrogen.jpg","G:/Monogame/SimGame/SpaceSimulation/SpaceSimulation/Content/bin/DesktopGL/Content/hydrogen.xnb","TextureProcessor","Texture2DContent",7109,770953,0.1644473
 "G:/Monogame/SimGame/SpaceSimulation/SpaceSimulation/Content/iron.png","G:/Monogame/SimGame/SpaceSimulation/SpaceSimulation/Content/bin/DesktopGL/Content/iron.xnb","TextureProcessor","Texture2DContent",961,4969,0.151474
+"G:/Monogame/SimGame/SpaceSimulation/SpaceSimulation/Content/nodeSettings.json","G:\Monogame\SimGame\SpaceSimulation\SpaceSimulation\Content\bin\DesktopGL\Content\nodeSettings.json","CopyItem","File",355,355,0.0003854
+"G:/Monogame/SimGame/SpaceSimulation/SpaceSimulation/Content/seed_745031_00001.png","G:/Monogame/SimGame/SpaceSimulation/SpaceSimulation/Content/bin/DesktopGL/Content/frigate1.xnb","TextureProcessor","Texture2DContent",399630,1048661,0.1591452
 "G:/Monogame/SimGame/SpaceSimulation/SpaceSimulation/Content/ship1.jpg","G:/Monogame/SimGame/SpaceSimulation/SpaceSimulation/Content/bin/DesktopGL/Content/ship1.xnb","TextureProcessor","Texture2DContent",7766,201661,0.152172
+"G:/Monogame/SimGame/SpaceSimulation/SpaceSimulation/Content/smallCar.jpg","G:/Monogame/SimGame/SpaceSimulation/SpaceSimulation/Content/bin/DesktopGL/Content/smallCar.xnb","TextureProcessor","Texture2DContent",10637,201069,0.1525872
+"G:/Monogame/SimGame/SpaceSimulation/SpaceSimulation/Content/spacestation.jpg","G:/Monogame/SimGame/SpaceSimulation/SpaceSimulation/Content/bin/DesktopGL/Content/spacestation.xnb","TextureProcessor","Texture2DContent",197075,2340085,0.1760477

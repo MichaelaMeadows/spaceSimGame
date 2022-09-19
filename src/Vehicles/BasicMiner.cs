@@ -7,13 +7,14 @@ namespace SpaceSimulation.Vehicles
 {
     class BasicMiner : Vehicle
     {
-        public BasicMiner(Tuple<int, int> location) : base(location)
+        public BasicMiner(Tuple<int, int> location, int empireId) : base(location, empireId)
         {
             this.speed = 3;
-            this.capacity = 50;
+            this.capacity = 300;
             this.current_capacity = 0;
             this.name = "ship1";
             this.miningpower = 2;
+            this.buildEffort = 8;
         }
 
         override public string getSprite()

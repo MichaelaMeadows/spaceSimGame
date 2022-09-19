@@ -12,7 +12,7 @@ namespace SpaceSimulation.src.Ships
     // Pull out to JSON definition and just load to make extensible to more ships?
     class Frigate : Vehicle
     {
-        public Frigate(Tuple<int, int> location) : base(location)
+        public Frigate(Tuple<int, int> location, int empireId) : base(location, empireId)
         {
             this.speed = 2;
             this.name = "frigate";

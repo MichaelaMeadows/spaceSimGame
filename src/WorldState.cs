@@ -17,13 +17,13 @@ namespace SpaceSimulation
     class WorldState
     {
         // Map is used to quickly identify neighbors instead of searching all entities
-        public List<Entity>[,] map { get; set; }
+        public HashSet<Entity>[,] map { get; set; }
         public Node[] nodes {get;}
 
         public int mapViewSize { get; set; }
         public static int BOX_SIZE = 100;
         // I want map size to be a clean multiple of box size
-        public static int MAP_SIZE = BOX_SIZE * 100;
+        public static int MAP_SIZE = BOX_SIZE * 500;
 
         // All goods are pre-determined, and exist in a fixed-sized array for performance.
         public Marketplace marketplace;
@@ -38,13 +38,13 @@ namespace SpaceSimulation
         public WorldState()
         {
             loadMarketplace();
-            map = new List<Entity>[MAP_SIZE / BOX_SIZE, MAP_SIZE / BOX_SIZE];
+            map = new HashSet<Entity>[MAP_SIZE / BOX_SIZE, MAP_SIZE / BOX_SIZE];
             var rand = new Random();
             for (int i = 0; i < MAP_SIZE / BOX_SIZE; i++)
             {
                 for (int j = 0; j < MAP_SIZE / BOX_SIZE; j++)
                 {
-                    map[i, j] = new List<Entity>();
+                    map[i, j] = new HashSet<Entity>();
                 }
 
             }

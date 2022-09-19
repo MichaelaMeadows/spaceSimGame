@@ -4,10 +4,20 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
+    <File>G:/Monogame/SimGame/SpaceSimulation/SpaceSimulation/Content/copper.jpg</File>
+    <File>G:/Monogame/SimGame/SpaceSimulation/SpaceSimulation/Content/hydrogen.jpg</File>
     <File>G:/Monogame/SimGame/SpaceSimulation/SpaceSimulation/Content/iron.png</File>
+    <File>G:/Monogame/SimGame/SpaceSimulation/SpaceSimulation/Content/seed_745031_00001.png</File>
     <File>G:/Monogame/SimGame/SpaceSimulation/SpaceSimulation/Content/ship1.jpg</File>
+    <File>G:/Monogame/SimGame/SpaceSimulation/SpaceSimulation/Content/smallCar.jpg</File>
+    <File>G:/Monogame/SimGame/SpaceSimulation/SpaceSimulation/Content/spacestation.jpg</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File>frigate1.png</File>
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
   </DestFiles>

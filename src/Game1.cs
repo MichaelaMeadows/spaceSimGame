@@ -65,13 +65,13 @@ namespace SpaceSimulation
 
             // Create 12 empires in random starting locations
             empires = new List<Empire>();
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < 50; i++)
             {
-                Empire e1 = new Empire(worldState);
+                Empire e1 = new Empire(worldState, i);
                 empires.Add(e1);
                 int x = r.Next(15, worldState.getMapSize() - 10);
                 int y = r.Next(15, worldState.getMapSize() - 10);
-                Station capital = new Station(new Tuple<int, int>(x, y), worldState);
+                Station capital = new Station(new Tuple<int, int>(x, y), worldState, i);
                 worldState.placeObject(capital, x, y);
                 e1.stations.Add(capital);
             }
