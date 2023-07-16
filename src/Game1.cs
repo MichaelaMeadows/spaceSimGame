@@ -105,6 +105,46 @@ namespace SpaceSimulation
             if (Keyboard.GetState().IsKeyDown(Keys.P) && worldState.mapViewSize < 2000)
                 worldState.mapViewSize = worldState.mapViewSize + 4;
 
+
+
+
+
+
+            // Prepare map scaling
+            var mapViewSize = worldState.mapViewSize;
+            var heightScale = (double)GraphicsDevice.Viewport.Height / mapViewSize;
+            var widthScale = (double)GraphicsDevice.Viewport.Width / mapViewSize;
+
+            var viewCorner_x = viewpoint.X - (mapViewSize / 2);
+            var viewCorner_y = viewpoint.Y - (mapViewSize / 2);
+
+            MouseState mouseState = Mouse.GetState();
+            if (mouseState.LeftButton == ButtonState.Pressed)
+            {
+                var xpos = mouseState.Position.X;
+                var ypos = mouseState.Position.Y;
+                // Convert these positions to the world state map, as integers
+                var mapX = (int)((xpos / widthScale) + viewCorner_x);
+                var mapY = (int)((ypos / widthScale) + viewCorner_y);
+
+                Debug.WriteLine(mapX + ":" + mapY);
+
+                Entity e = worldState.getEntityAtLocation(mapX, mapY);
+
+                if (e != null)
+                {
+                    Debug.WriteLine(e.getSize());
+                }
+            }
+            if (mouseState.RightButton == ButtonState.Pressed)
+            {
+                // Right mouse button is pressed
+                // Do something
+            }
+
+
+
+
             // Nodes refresh available resources.
             if (tickCount % 60 == 0)
             {
@@ -149,7 +189,11 @@ namespace SpaceSimulation
                     (int)(e.getSize() * heightScale)), 
                     Color.White);
             }
-            
+
+            // Draw a bar at the botom of the screen with buttons of the left, and a unit card on the right
+
+
+
             _spriteBatch.End();
 
             GraphicsDevice.SetRenderTarget(null);

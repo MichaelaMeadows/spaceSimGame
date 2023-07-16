@@ -128,6 +128,34 @@ namespace SpaceSimulation
             return found;
         }
 
+        // Return the object whos location is closest to X, Y, with an error range of 3
+        public Entity getEntityAtLocation(int x, int y)
+        {
+            var i = Math.Min(MAP_SIZE / BOX_SIZE - 1, (x / BOX_SIZE) + 1);
+            var j = Math.Min(MAP_SIZE / BOX_SIZE - 1, (y / BOX_SIZE) + 1);
+
+            // For entities in this box, find the closest one +- 3 units
+            Entity closest = null;
+            
+            foreach (Entity e in map[i, j])
+            {
+                var dist = Math.Sqrt(Math.Pow(e.getLocation().Item1 - x, 2) + Math.Pow(e.getLocation().Item2 - y, 2));
+                
+                if (closest == null && dist < 8) {
+                    closest = e;
+                }
+                else if (closest != null) {
+                    var dist2 = Math.Sqrt(Math.Pow(closest.getLocation().Item1 - x, 2) + Math.Pow(closest.getLocation().Item2 - y, 2));
+
+                    if (dist < dist2) {
+                        closest = e;
+                    }
+                }
+            }
+            return closest;
+
+        }
+
         public void updateNodes()
         {
             foreach (Node n in nodes) {

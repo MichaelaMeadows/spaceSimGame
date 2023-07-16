@@ -105,7 +105,7 @@ namespace SpaceSimulation.Bases
                                 // TODO. More elegant soluton could be good!
                                 tmp_nodes[type].Add(distance + .000000001, n);
                             }
-                        }  
+                        }
                     }
                 }
             }
