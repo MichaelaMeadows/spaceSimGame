@@ -24,6 +24,8 @@ namespace SpaceSimulation.src.Ships
             this.shield_recharge = 1;
             this.buildEffort = 20;
             this.weapons = new Weapon[6];
+            // Write a debug statement
+            Console.WriteLine("Frigate created at: " + location.Item1 + "-" + location.Item2);
         }
         public int id { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public int fuel { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
@@ -49,11 +51,11 @@ namespace SpaceSimulation.src.Ships
             List<int[]> cost = new List<int[]>();
             int[] c = new int[2];
             c[0] = 7;
-            c[1] = 20;
+            c[1] = 5;
             cost.Add(c);
             c = new int[2];
             c[0] = 8;
-            c[1] = 10;
+            c[1] = 5;
             cost.Add(c);
             return cost;
         }

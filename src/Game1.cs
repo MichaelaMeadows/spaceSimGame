@@ -65,7 +65,7 @@ namespace SpaceSimulation
 
             // Create 12 empires in random starting locations
             empires = new List<Empire>();
-            for (int i = 0; i < 50; i++)
+            for (int i = 0; i < 2; i++)
             {
                 Empire e1 = new Empire(worldState, i);
                 empires.Add(e1);

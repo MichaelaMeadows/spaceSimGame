@@ -56,20 +56,25 @@ namespace SpaceSimulation.src.Commands
                 }
             }
             
-            engageTargets(closeEntities, v.empire);
+            engageTargets(closeEntities, v.empire, ws);
         }
-        private void engageTargets(List<Vehicle> closeEntities, int empire)
+        private void engageTargets(List<Vehicle> closeEntities, int empire, WorldState ws)
         {
-            foreach (Weapon w in v.weapons)
-            {
-                // Fire weapons at valid targets. Reload time etc should be calculated in the weapon itself I think.
-            }
+            KineticWeapon weapon = new KineticWeapon(10, 12, 400);
+            // foreach (Weapon w in v.weapons)
+            // {
+            // Fire weapons at valid targets. Reload time etc should be calculated in the weapon itself I think.
+            // TODO the weapon need to be built and loaded
 
-            foreach(Vehicle ce in closeEntities)
+            //}
+
+            foreach (Vehicle ce in closeEntities)
             {
-                if (ce.empire != empire)
-                // Instant boom
-                ce.health = 0;
+                if (ce.empire != empire) {
+                    // Instant boom
+                    //ce.health = 0;
+                    ws.projectiles.Add(weapon.fireWeapon(v.location, ce.location));
+                }
             }
         }
 

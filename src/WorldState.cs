@@ -4,6 +4,7 @@ using SpaceSimulation.Components;
 using SpaceSimulation.Empires;
 using SpaceSimulation.Helpers;
 using SpaceSimulation.Nodes;
+using SpaceSimulation.src.Ships;
 using SpaceSimulation.Vehicles;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,7 @@ namespace SpaceSimulation
         // Map is used to quickly identify neighbors instead of searching all entities
         public HashSet<Entity>[,] map { get; set; }
         public Node[] nodes {get;}
+        public List<Projectile> projectiles { get; set; }
 
         public int mapViewSize { get; set; }
         public static int BOX_SIZE = 100;
@@ -162,6 +164,21 @@ namespace SpaceSimulation
                 n.refresh();
             }
         }
+
+        public void updateProjectiles()
+        {
+            List<Projectile> newProjectiles = new List<Projectile>();
+            foreach(Projectile p in projectiles)
+            {
+                bool result = p.update(this);
+                if (result)
+                {
+                    newProjectiles.Add(p);
+                }
+            }
+            this.projectiles = newProjectiles;
+        }
+
 
         // TODO Convert to use new map boxed system
         public Tuple<int, int> findEmptyNeighbor(int x, int y)
