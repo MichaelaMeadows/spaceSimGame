@@ -65,7 +65,7 @@ namespace SpaceSimulation
 
             // Create 12 empires in random starting locations
             empires = new List<Empire>();
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < 50; i++)
             {
                 Empire e1 = new Empire(worldState, i);
                 empires.Add(e1);
@@ -150,6 +150,13 @@ namespace SpaceSimulation
             {
                 worldState.updateNodes();
             }
+
+            // Nodes refresh available resources.
+            if (tickCount % 5 == 0)
+            {
+                worldState.updateProjectiles();
+            }
+
             // Game runs in 1 minute logical loops so far
             if (tickCount > 600)
             {

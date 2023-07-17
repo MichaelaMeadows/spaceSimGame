@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Text.Json;
 
@@ -39,6 +40,7 @@ namespace SpaceSimulation
 
         public WorldState()
         {
+            projectiles = new List<Projectile>();
             loadMarketplace();
             map = new HashSet<Entity>[MAP_SIZE / BOX_SIZE, MAP_SIZE / BOX_SIZE];
             var rand = new Random();
@@ -155,6 +157,27 @@ namespace SpaceSimulation
                 }
             }
             return closest;
+
+        }
+
+        public List<Entity> getEntitiesWithinDistance(int x, int y, int z)
+        {
+            var i = Math.Min(MAP_SIZE / BOX_SIZE - 1, (x / BOX_SIZE) + 1);
+            var j = Math.Min(MAP_SIZE / BOX_SIZE - 1, (y / BOX_SIZE) + 1);
+
+            List<Entity> found = new List<Entity>();
+
+            foreach (Entity e in map[i, j])
+            {
+                var dist = Math.Sqrt(Math.Pow(e.getLocation().Item1 - x, 2) + Math.Pow(e.getLocation().Item2 - y, 2));
+
+                if (dist < z)
+                {
+                    found.Add(e);
+                }
+
+            }
+            return found;
 
         }
 

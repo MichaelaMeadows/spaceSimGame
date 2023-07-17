@@ -49,8 +49,8 @@ namespace SpaceSimulation.Bases
             combatShips = new List<Vehicle>();
             this.goods = new int[state.marketplace.goods.Length];
             this.desiredGoods = new int[state.marketplace.goods.Length];
-            this.goods[0] += 1000;
-            this.goods[1] += 100;
+            this.goods[0] += 5000;
+            this.goods[1] += 500;
 
             closeNodes = new List<Node>[WorldState.RESOURCE_COUNT];
             populateCloseNodes(state);

@@ -1,6 +1,7 @@
 ﻿using SpaceSimulation.Components;
 using SpaceSimulation.Helpers;
 using SpaceSimulation.Ships;
+using SpaceSimulation.Vehicles;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -34,14 +35,15 @@ namespace SpaceSimulation.src.Ships
             this.currentLocation = nextLocation;
             range -= speed;
 
+
             // Check collision
-            Entity e = ws.getEntityAtLocation(nextLocation.Item1, nextLocation.Item2);
-            if (e != null)
+            List<Entity> e = ws.getEntitiesWithinDistance(nextLocation.Item1, nextLocation.Item2, 12);
+            if (e.Count > 0)
             {
                 // See if e is a Ship
-                if(e is Ship)
+                if(e[0] is Vehicle)
                 {
-                    Ship ship = (Ship)e;
+                    Ship ship = (Ship)(e[0]);
                     ship.health -= damage;
                     return false;
                 }
