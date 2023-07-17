@@ -19,7 +19,7 @@ namespace SpaceSimulation.src.Ships
 
         public Projectile fireWeapon(Tuple<int, int> currentLocation, Tuple<int, int> target)
         {
-            return new Projectile(currentLocation, target, speed, damage, range);  
+            return new Projectile(currentLocation, target, speed, damage, range, 4);  
         }
     }
 }

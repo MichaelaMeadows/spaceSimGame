@@ -15,15 +15,17 @@ namespace SpaceSimulation.src.Ships
         public int speed { get; set; }
         public int damage { get; set; }
         public int range { get; set; }
+        public int size { get; set; }
 
         // Constructor for a projectile.
-        public Projectile(Tuple<int, int> currentLocation, Tuple<int, int> targetLocation, int speed, int damage, int range)
+        public Projectile(Tuple<int, int> currentLocation, Tuple<int, int> targetLocation, int speed, int damage, int range, int size)
         {
             this.speed = speed;
             this.currentLocation = currentLocation;
             this.targetLocation = targetLocation;
             this.damage = damage;
             this.range = range;
+            this.size = size;
         }
 
         // Moves projectile, checks for collision, does damage, removes itself if out of range or hits something.

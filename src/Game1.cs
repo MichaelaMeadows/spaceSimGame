@@ -6,6 +6,7 @@ using SpaceSimulation.Commands;
 using SpaceSimulation.Components;
 using SpaceSimulation.Empires;
 using SpaceSimulation.Ships;
+using SpaceSimulation.src.Ships;
 using SpaceSimulation.UI;
 using SpaceSimulation.Vehicles;
 using System;
@@ -37,7 +38,7 @@ namespace SpaceSimulation
 
         //Viewpoint index using the world state map, not the scaled view.
         private Point viewpoint;
-        private int pan_speed = 8;
+        private int pan_speed = 20;
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -94,6 +95,7 @@ namespace SpaceSimulation
             textureMap.Add("spacestation", Content.Load<Texture2D>("spacestation"));
             textureMap.Add("smallCar", Content.Load<Texture2D>("smallCar"));
             textureMap.Add("hydrogen", Content.Load<Texture2D>("hydrogen"));
+            textureMap.Add("KineticRound", Content.Load<Texture2D>("KineticRound"));
 
             baseUi.load(Content, GraphicsDevice);
         }
@@ -116,10 +118,6 @@ namespace SpaceSimulation
                 worldState.mapViewSize = worldState.mapViewSize - 4;
             if (Keyboard.GetState().IsKeyDown(Keys.P) && worldState.mapViewSize < 2000)
                 worldState.mapViewSize = worldState.mapViewSize + 4;
-
-
-
-
 
 
             // Prepare map scaling
@@ -154,9 +152,6 @@ namespace SpaceSimulation
                 // Do something
 
             }
-
-
-
 
             // Nodes refresh available resources.
             if (tickCount % 60 == 0)
@@ -199,6 +194,8 @@ namespace SpaceSimulation
             var viewCorner_y = viewpoint.Y - (mapViewSize / 2);
             List<Entity> objectsInView = worldState.GetObjectsInView(viewpoint.X, viewpoint.Y);
 
+            List<Projectile> projectilesInVite = worldState.GetProjectilesInView(viewpoint.X, viewpoint.Y);
+
             _spriteBatch.Begin();
 
             foreach (Entity e in objectsInView)
@@ -210,6 +207,17 @@ namespace SpaceSimulation
                     (int)(e.getSize() * heightScale)), 
                     Color.White);
             }
+
+            foreach (Projectile p in projectilesInVite)
+            {
+                _spriteBatch.Draw(textureMap.GetValueOrDefault("KineticRound"), new Rectangle(
+                    (int)((p.currentLocation.Item1 - viewCorner_x - (p.size / 2)) * widthScale),
+                    (int)((p.currentLocation.Item2 - viewCorner_y - (p.size / 2)) * heightScale),
+                    (int)(p.size * widthScale),
+                    (int)(p.size * heightScale)),
+                    Color.White);
+            }
+
 
             _spriteBatch.End();
             // Draw a bar at the botom of the screen with buttons of the left, and a unit card on the right

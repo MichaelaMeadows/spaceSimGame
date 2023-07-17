@@ -132,6 +132,37 @@ namespace SpaceSimulation
             return found;
         }
 
+        public List<Projectile> GetProjectilesInView(int x, int y)
+        {
+            List<Entity> found = new List<Entity>();
+            int half = (mapViewSize / 2);
+            var left = Math.Max(0, x - half);
+            var right = Math.Min(MAP_SIZE, x + half);
+            var top = Math.Max(0, y - half);
+            var bot = Math.Min(MAP_SIZE, y + half);
+
+            var imax = Math.Min(MAP_SIZE / BOX_SIZE - 1, (right / BOX_SIZE) + 1);
+            var jmax = Math.Min(MAP_SIZE / BOX_SIZE - 1, (bot / BOX_SIZE) + 1);
+
+            List<Projectile> foundProjectiles = new List<Projectile>();
+
+            foreach (Projectile p in projectiles)
+            {
+                int xpos = p.currentLocation.Item1;
+                int ypos = p.currentLocation.Item2;
+
+                if (xpos >= left && xpos <= right)
+                {
+                    if(ypos >= top && ypos <= bot)
+                    {
+                        foundProjectiles.Add(p);
+                    }
+                }
+            }
+
+            return foundProjectiles;
+        }
+
         // Return the object whos location is closest to X, Y, with an error range of 3
         public Entity getEntityAtLocation(int x, int y)
         {
