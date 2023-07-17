@@ -6,6 +6,7 @@ using SpaceSimulation.Commands;
 using SpaceSimulation.Components;
 using SpaceSimulation.Empires;
 using SpaceSimulation.Ships;
+using SpaceSimulation.UI;
 using SpaceSimulation.Vehicles;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,9 @@ namespace SpaceSimulation
 {
     public class Game1 : Game
     {
+        private int windowWidth;
+        private int windowHeight;
+
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
@@ -26,6 +30,8 @@ namespace SpaceSimulation
 
         private Random r;
         private Dictionary<string, Texture2D> textureMap;
+
+        private BaseUI baseUi;
 
         float tickCount;
 
@@ -47,18 +53,21 @@ namespace SpaceSimulation
 
             r = new Random();
             tickCount = 0;
-
+            windowWidth = Math.Min(1920, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width);
+            windowHeight = Math.Min(1080, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width);
+            baseUi = new BaseUI(windowWidth, windowHeight);
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
-            _graphics.PreferredBackBufferWidth = 1920;
-            _graphics.PreferredBackBufferHeight = 1080;
+            _graphics.PreferredBackBufferWidth = windowWidth;
+            _graphics.PreferredBackBufferHeight = windowHeight;
+            _graphics.IsFullScreen = true;
             _graphics.ApplyChanges();
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             scale = 1f / (1080f / GraphicsDevice.Viewport.Height);
-            renderTarget = new RenderTarget2D(GraphicsDevice, 1920, 1080);
+            renderTarget = new RenderTarget2D(GraphicsDevice, windowWidth, windowHeight);
             viewpoint = new Point(500, 500);
 
             worldState = new WorldState();
@@ -73,6 +82,7 @@ namespace SpaceSimulation
                 int y = r.Next(15, worldState.getMapSize() - 10);
                 Station capital = new Station(new Tuple<int, int>(x, y), worldState, i);
                 worldState.placeObject(capital, x, y);
+                Debug.WriteLine("capital " + i + " placed at " + x + "," + y);
                 e1.stations.Add(capital);
             }
 
@@ -80,10 +90,12 @@ namespace SpaceSimulation
             textureMap.Add("iron", Content.Load<Texture2D>("iron"));
             textureMap.Add("copper", Content.Load<Texture2D>("copper"));
             textureMap.Add("ship1", Content.Load<Texture2D>("ship1"));
-            textureMap.Add("frigate1", Content.Load<Texture2D>("frigate1"));
+            textureMap.Add("frigate1", Content.Load<Texture2D>("ship1"));
             textureMap.Add("spacestation", Content.Load<Texture2D>("spacestation"));
             textureMap.Add("smallCar", Content.Load<Texture2D>("smallCar"));
             textureMap.Add("hydrogen", Content.Load<Texture2D>("hydrogen"));
+
+            baseUi.load(Content, GraphicsDevice);
         }
 
         protected override void Update(GameTime gameTime)
@@ -140,6 +152,7 @@ namespace SpaceSimulation
             {
                 // Right mouse button is pressed
                 // Do something
+
             }
 
 
@@ -167,7 +180,8 @@ namespace SpaceSimulation
             {
                 e.executeStrategy(worldState, (int) tickCount);
             }
-
+            //TODO: avoid double worldStateGet
+            baseUi.update(gameTime, worldState.GetObjectsInView(viewpoint.X, viewpoint.Y).Count, mouseState, viewpoint, worldState.mapViewSize);
             // TODO: Add your update logic here
             base.Update(gameTime);
         }
@@ -197,11 +211,9 @@ namespace SpaceSimulation
                     Color.White);
             }
 
-            // Draw a bar at the botom of the screen with buttons of the left, and a unit card on the right
-
-
-
             _spriteBatch.End();
+            // Draw a bar at the botom of the screen with buttons of the left, and a unit card on the right
+            baseUi.draw(_spriteBatch);
 
             GraphicsDevice.SetRenderTarget(null);
             _spriteBatch.Begin();
