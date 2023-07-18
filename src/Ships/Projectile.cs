@@ -45,7 +45,7 @@ namespace SpaceSimulation.src.Ships
                 // See if e is a Ship
                 if(e[0] is Vehicle)
                 {
-                    Ship ship = (Ship)(e[0]);
+                    Vehicle ship = (Vehicle)(e[0]);
                     ship.health -= damage;
                     return false;
                 }

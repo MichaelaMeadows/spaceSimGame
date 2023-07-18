@@ -57,7 +57,7 @@ namespace SpaceSimulation.src.Commands
         }
         private void engageTargets(List<Vehicle> closeEntities, int empire, WorldState ws)
         {
-            KineticWeapon weapon = new KineticWeapon(10, 14, 600);
+            KineticWeapon weapon = new KineticWeapon(10, 16, 600);
             // foreach (Weapon w in v.weapons)
             // {
             // Fire weapons at valid targets. Reload time etc should be calculated in the weapon itself I think.
