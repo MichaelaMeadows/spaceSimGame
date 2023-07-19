@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SpaceSimulation.UI.Components
 {
-    interface Loadable
+    public interface Loadable
     {
         public void load(ContentManager contentManager, GraphicsDevice graphicsDevice);
     }

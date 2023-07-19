@@ -4,12 +4,12 @@ using System.Text;
 
 namespace SpaceSimulation.Helpers
 {
-    class GoodMarket
+    public class GoodMarket
     {
         public List<Offer> offers { get; }
     }
 
-    internal class Offer
+    public class Offer
     {
     }
 }

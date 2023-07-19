@@ -7,7 +7,7 @@ using System.Text.Json;
 
 namespace SpaceSimulation.Helpers
 {
-    class Marketplace
+    public class Marketplace
     {
         public GoodMarket[] offers { get; }
         public Goods[] goods;

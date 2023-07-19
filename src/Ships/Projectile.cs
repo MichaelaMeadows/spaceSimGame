@@ -8,7 +8,7 @@ using System.Text;
 
 namespace SpaceSimulation.src.Ships
 {
-    class Projectile
+    public class Projectile
     {
         public Tuple<int, int> currentLocation { get; set; }
         public Tuple<int, int> targetLocation { get; set; }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SpaceSimulation.UI.Components
 {
-    interface Drawable
+    public interface Drawable
     {
         public void draw(SpriteBatch spriteBatch);
     }
