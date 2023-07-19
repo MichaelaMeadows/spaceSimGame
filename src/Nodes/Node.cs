@@ -6,7 +6,7 @@ using System.Text;
 
 namespace SpaceSimulation.Nodes
 {
-    class Node : Entity
+    public class Node : Entity
     {
         public int id { get; set; }
         public int type { get; set; }

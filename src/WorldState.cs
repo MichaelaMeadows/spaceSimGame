@@ -16,7 +16,7 @@ using System.Text.Json;
 
 namespace SpaceSimulation
 {
-    class WorldState
+    public class WorldState
     {
         // Map is used to quickly identify neighbors instead of searching all entities
         public HashSet<Entity>[,] map { get; set; }
@@ -166,16 +166,14 @@ namespace SpaceSimulation
         // Return the object whos location is closest to X, Y, with an error range of 3
         public Entity getEntityAtLocation(int x, int y)
         {
-            var i = Math.Min(MAP_SIZE / BOX_SIZE - 1, (x / BOX_SIZE) + 1);
-            var j = Math.Min(MAP_SIZE / BOX_SIZE - 1, (y / BOX_SIZE) + 1);
-
+            var i = Math.Min(MAP_SIZE / BOX_SIZE - 1, (x / BOX_SIZE) );
+            var j = Math.Min(MAP_SIZE / BOX_SIZE - 1, (y / BOX_SIZE) );
             // For entities in this box, find the closest one +- 3 units
             Entity closest = null;
-            
+
             foreach (Entity e in map[i, j])
             {
                 var dist = Math.Sqrt(Math.Pow(e.getLocation().Item1 - x, 2) + Math.Pow(e.getLocation().Item2 - y, 2));
-                
                 if (closest == null && dist < 8) {
                     closest = e;
                 }

@@ -11,8 +11,8 @@ using System.Threading.Tasks;
 namespace SpaceSimulation.UI.Components
 {
     // This interface is dubious at best. I think BaseUI needs specialized information fed to it
-    interface Updatable
+    public interface Updatable
     {
-        public void update(GameTime gameTime, int unitCount /*worldState?*/, MouseState mouseState, Point viewPoint, int scaleSize);
+        public void update(float tickCount, WorldState worldState, MouseState mouseState, Point viewPoint);
     }
 }

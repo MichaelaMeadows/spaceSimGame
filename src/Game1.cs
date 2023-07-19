@@ -5,6 +5,7 @@ using SpaceSimulation.Bases;
 using SpaceSimulation.Commands;
 using SpaceSimulation.Components;
 using SpaceSimulation.Empires;
+using SpaceSimulation.Helpers;
 using SpaceSimulation.Ships;
 using SpaceSimulation.src.Ships;
 using SpaceSimulation.UI;
@@ -56,7 +57,7 @@ namespace SpaceSimulation
             tickCount = 0;
             windowWidth = Math.Min(1920, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width);
             windowHeight = Math.Min(1080, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width);
-            baseUi = new BaseUI(windowWidth, windowHeight);
+            baseUi = new BaseUI(windowWidth, windowHeight, 15);
             base.Initialize();
         }
 
@@ -83,7 +84,6 @@ namespace SpaceSimulation
                 int y = r.Next(15, worldState.getMapSize() - 10);
                 Station capital = new Station(new Tuple<int, int>(x, y), worldState, i);
                 worldState.placeObject(capital, x, y);
-                Debug.WriteLine("capital " + i + " placed at " + x + "," + y);
                 e1.stations.Add(capital);
             }
 
@@ -122,29 +122,22 @@ namespace SpaceSimulation
 
             // Prepare map scaling
             var mapViewSize = worldState.mapViewSize;
-            var heightScale = (double)GraphicsDevice.Viewport.Height / mapViewSize;
-            var widthScale = (double)GraphicsDevice.Viewport.Width / mapViewSize;
-
-            var viewCorner_x = viewpoint.X - (mapViewSize / 2);
-            var viewCorner_y = viewpoint.Y - (mapViewSize / 2);
 
             MouseState mouseState = Mouse.GetState();
             if (mouseState.LeftButton == ButtonState.Pressed)
             {
-                var xpos = mouseState.Position.X;
-                var ypos = mouseState.Position.Y;
-                // Convert these positions to the world state map, as integers
-                var mapX = (int)((xpos / widthScale) + viewCorner_x);
-                var mapY = (int)((ypos / widthScale) + viewCorner_y);
-
-                Debug.WriteLine(mapX + ":" + mapY);
-
-                Entity e = worldState.getEntityAtLocation(mapX, mapY);
-
-                if (e != null)
-                {
-                    Debug.WriteLine(e.getSize());
-                }
+                Point convertedPoint = WorldSpaceMath.GetWorldPointForMousePoint(
+                    viewpoint, 
+                    mouseState.Position, 
+                    mapViewSize, 
+                    GraphicsDevice.Viewport.Height, 
+                    GraphicsDevice.Viewport.Width
+                );
+               
+                Entity entityAtLoc = worldState.getEntityAtLocation(convertedPoint.X, convertedPoint.Y);
+                // TODO: attach entity directly? Make it subscribe to mouse events? do anything other than this
+                baseUi.attachEntity(entityAtLoc);
+                
             }
             if (mouseState.RightButton == ButtonState.Pressed)
             {
@@ -176,7 +169,12 @@ namespace SpaceSimulation
                 e.executeStrategy(worldState, (int) tickCount);
             }
             //TODO: avoid double worldStateGet
-            baseUi.update(gameTime, worldState.GetObjectsInView(viewpoint.X, viewpoint.Y).Count, mouseState, viewpoint, worldState.mapViewSize);
+            baseUi.update(
+                tickCount, 
+                worldState, 
+                mouseState, 
+                viewpoint
+            );
             // TODO: Add your update logic here
             base.Update(gameTime);
         }
